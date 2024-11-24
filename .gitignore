@@ -1,0 +1,48 @@
+# Python (Django)
+*.pyc
+*.pyo
+*.pyd
+__pycache__
+db.sqlite3            # SQLite база даних
+*.sqlite3
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.bak
+*.swp
+.env                 # Файли середовища
+*.env
+
+# Virtual environments
+venv/
+env/
+.venv/
+env.bak/
+
+# Django migrations
+*/migrations/
+*/migrations/*.pyc
+*/migrations/*.pyo
+
+# Django static files
+static/
+
+# React (Frontend)
+node_modules/
+build/
+
+# OS-specific files
+.DS_Store          # macOS
+Thumbs.db          # Windows
+
+# Log files
+*.log
+
+# IDE-specific files
+.idea/             # JetBrains IDEs (e.g., PhpStorm, PyCharm)
+.vscode/           # Visual Studio Code
+*.sublime-workspace
+*.sublime-project
