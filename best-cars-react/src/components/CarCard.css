@@ -1,0 +1,33 @@
+.car-card{
+    width: 20%;
+    border: 1px solid black;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+}
+
+.time-price-container{
+    width: 100%;
+}
+
+.time-price {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    border-bottom: 1px solid black;
+}
+
+.time-price span{
+    display: block;
+}
+
+.rent-button{
+    padding: 15px;
+    background: white;
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 50%;
+}

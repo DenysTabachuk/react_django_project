@@ -3,6 +3,9 @@ import React from 'react';
 import Header from '../components/Header/Header';
 import Select from '../components/Select';
 import CarCard from '../components/CarCard';
+import Footer from '../components/Footer/Footer';
+
+import "./Home.css"
 
 const Home = () => {
 
@@ -80,10 +83,12 @@ const Home = () => {
       
     </div>
 
-      <div id="car-cards-container">
-        { cars.map( (car) => <CarCard carObject={car}></CarCard> )}
+    <div id="car-cards-container">
+      { cars.map( (car) => <CarCard carObject={car}></CarCard> )}
 
-      </div>
+    </div>
+
+    <Footer></Footer>
 
     </>
   );
