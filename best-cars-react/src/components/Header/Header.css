@@ -4,6 +4,7 @@ header{
     align-items: center;
     justify-content: space-between;
     padding: 0 50px 0 50px;
+    border-bottom: 1px solid gray;
 }
 
 header ul {
@@ -17,7 +18,7 @@ header li {
     padding: 10px;
 }
 
-header li a {
+header  a {
     text-decoration: none;
     color: black;
 }
@@ -30,4 +31,8 @@ header li a {
 #sign-up{
     background-color: blue;
     border-radius: 20px;
+}
+
+#sign-in span, #sign-up span{
+    color: white;
 }

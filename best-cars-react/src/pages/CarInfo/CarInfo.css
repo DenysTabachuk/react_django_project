@@ -1,0 +1,47 @@
+#car-info-container{
+    padding: 0 20px 40px 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
+#column1{
+    width: 65%;
+}
+
+#column2{
+
+   margin: 75px 0px 40px 20px;
+}
+
+#main-characteristics-container{
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+}
+
+#additional-functions-container {
+    margin-left: 20px;
+}
+
+#car-info-container ul{
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: start;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+#car-info-container ul li{
+    display: flex;
+    align-items: center;
+}
+
+#car-info-container ul li img{
+    padding: 5px;
+}
+
+
+#description-continaer p {
+    margin-left: 20px;
+}

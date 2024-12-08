@@ -1,0 +1,136 @@
+#rent-registration-grid-container {
+    padding: 0px 20px 70px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Дві колонки рівної ширини */
+    gap: 20px; /* Відступ між колонками */
+
+}
+
+.icon {
+    height: 30px;
+}
+
+.description{
+    color: gray;
+}
+
+.column-space-between{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+/* option services */
+
+#option-services-wrapper{
+    padding: 10px;
+    width: 80%;
+}
+
+.checkbox-icon-name{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+
+.option-service{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+/* payment method */
+
+#payment-method-wrapper{
+    width: 80%;
+}
+
+.payment-method-option{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#payment-methods-container{
+    margin-left: 20px;
+}
+
+.radio-icon-name{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* contanct info */
+#contact-info-wrapper{
+    display: flex;
+    flex-direction: column;
+}
+
+#contanct-info-inputs{
+    margin-left: 20px;
+}
+
+#contact-info-wrapper input{
+    padding: 15px;
+    width: 50%;
+}
+
+.label-input{
+    margin-bottom: 20px;
+}
+
+/* comment */
+
+#comment-wrapper textarea{
+    width: 70%;
+    min-height: 250px;
+    margin-left: 20px;
+}
+
+
+/* order summary  */
+#order-summary-wrapper{
+    width: 70%;
+}
+
+#car-image-name-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#car-image-name-container img {
+    width: 40%;
+
+}
+
+#option-price-container{
+    padding: 20px 0 0 20px;
+    border-top: 1px  solid gray;
+    margin-top: 20px;
+}
+
+.option-price{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+}
+
+#rent-button-container{
+    display: flex;
+    justify-content: center;
+}
+
+#confirm-rent-button{
+    background-color: black;
+    color: white;
+    padding: 15px;
+    border-radius: 15px;
+}
+
+
+
