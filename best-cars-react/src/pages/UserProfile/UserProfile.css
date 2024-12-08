@@ -1,0 +1,47 @@
+#user-profile{
+    margin: 40px 20px 40px 20px;
+}
+
+#profile-info-container{
+    display: flex;
+    gap: 40px;
+
+}
+
+.profile-info-item{
+    border: 1px solid gray;
+    padding: 40px;
+}
+
+.profile-info-button-container{
+    display: flex;
+    gap: 20px;
+    justify-content: space-around;
+}
+
+.edit-add-profile-item-button{
+    padding: 5px;
+    border-radius: 10px;
+    background-color: black;
+    color: white;
+
+}
+
+.profile-car-item{
+    border: 1px solid gray;
+    display: flex;
+    width: 33%;
+}
+
+.profile-car-item img {
+    width: 50%;
+}
+
+#logout-button{
+    margin-top: 30px;
+    padding: 15px;
+    border-radius: 15px;
+    color: white;
+    font-weight: bold;
+    background-color: black;
+}

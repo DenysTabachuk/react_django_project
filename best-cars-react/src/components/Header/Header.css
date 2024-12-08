@@ -33,6 +33,11 @@ header  a {
     border-radius: 20px;
 }
 
-#sign-in span, #sign-up span{
+#my-profile{
+    background-color: black;
+    border-radius: 20px;
+}
+
+#sign-in span, #sign-up span, #my-profile span{
     color: white;
 }

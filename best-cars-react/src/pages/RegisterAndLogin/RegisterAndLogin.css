@@ -1,0 +1,62 @@
+.register-login-container{
+    align-self: center;
+    border: 1px solid gray;
+    width: 33%;
+    margin: auto;
+    margin-top: 60px;
+    margin-bottom: 60px;
+    padding: 30px;
+    border-radius: 15px;
+}
+
+.link-text {
+    padding-top: 40px;
+    color: #000;
+}
+
+.register-login-container label {
+    font-size: large;
+}
+
+.register-login-container input{
+    padding: 8px;
+    width: 90%;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+.input-container{
+    margin-bottom: 20px;
+}
+
+
+.register-login-button-container{
+    display: flex;
+    justify-content: center;
+}
+
+.register-login-button-container button{
+    padding: 15px;
+    border-radius: 15px;
+    width: 33%;
+    margin-top: 20px;
+    font-weight: bold;
+    color: white;
+    background-color: black;
+}
+
+
+.checkbox-container{
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.checkbox-container input {
+    display: flex;
+
+    margin: 0;
+    padding: 0;
+    width: 15px;
+
+}
