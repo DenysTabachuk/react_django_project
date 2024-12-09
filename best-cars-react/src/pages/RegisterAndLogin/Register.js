@@ -4,6 +4,7 @@ import Header from '../../components/Header/Header.js';
 import Footer from '../../components/Footer/Footer.js';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { validatePassword, validatePhoneNumber } from '../../validation/UserInfoValidation.js';
 
 export default function Register() {
     const [formData, setFormData] = useState({
@@ -13,17 +14,34 @@ export default function Register() {
     });
 
     const [message, setMessage] = useState('');
+    const [phoneErrorMessage, setPhoneErrorMessage] = useState('');
+    const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = async (e) => {
-        console.log("submit");
-        
-        if (formData.password !== formData.confirmPassword) {
-            setMessage('Паролі не співпадають');
+        e.preventDefault();
+
+        setPhoneErrorMessage('');
+        setPasswordErrorMessage('');
+
+        //phone number validation
+        if (!validatePhoneNumber(formData.phone_number)) {
+            setPhoneErrorMessage('Невірний формат номера телефону');
+        return;
         }
+         // password validation
+        if (!validatePassword(formData.password)) {
+            setPasswordErrorMessage('Пароль повинен містити хоча б одну велику літеру і одну цифру, мінімум 6 символів');
+            return;
+        }
+        if (formData.password !== formData.confirmPassword) {
+            setPasswordErrorMessage('Паролі не співпадають');
+        }
+
+        // 
         e.preventDefault();
         try {
             const response = await axios.post('http://127.0.0.1:8000/api/users/register/', formData);
@@ -50,6 +68,7 @@ export default function Register() {
                         value={formData.phone_number}
                         onChange={handleChange}
                     />
+                    <span className='error-text'>{ phoneErrorMessage != '' && phoneErrorMessage}</span>
                 </div>
                 <div className='input-container'>
                     <label>Пароль:</label>
@@ -71,6 +90,8 @@ export default function Register() {
                         value={formData.confirm_password}
                         onChange={handleChange}
                     />
+                    <span className='error-text'>{ passwordErrorMessage != '' && passwordErrorMessage}</span>
+                
                 </div>
 
                 <Link to = '/login'><span className='link-text'>Вже зареєстровані ?</span></Link>
@@ -83,11 +104,11 @@ export default function Register() {
 
                 
                 <div className="register-login-button-container">
-                        <button type="submit" onClick={handleSubmit}>Зареєструватися</button>
+                    <button type="submit" onClick={handleSubmit}>Зареєструватися</button>
                 </div>
             </form>
 
-            {message && <p>{message}</p>}
+            <span className='error-text'>{message && <p>{message}</p>}</span>
         </div>
 
         <Footer></Footer>

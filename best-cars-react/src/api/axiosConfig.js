@@ -3,6 +3,7 @@ import axios from 'axios';
 // Create Axios Instance
 const axiosConfig = axios.create({
   baseURL: 'http://127.0.0.1:8000/api/', //replace with your BaseURL
+  refreshTokenURL: "http://127.0.0.1:8000/token/refresh/",
   headers: {
     'Content-Type': 'application/json', // change according header type accordingly
   },
@@ -13,7 +14,6 @@ const axiosConfig = axios.create({
 axiosConfig.interceptors.request.use(
     (config) => {
       const accessToken = localStorage.getItem('access_token'); // get stored access token
-      console.log("here " + accessToken);
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`; // set in header
       }
@@ -39,7 +39,7 @@ axiosConfig.interceptors.request.use(
         const refreshToken = localStorage.getItem('refresh_token');
         if (refreshToken) {
           try {
-            const response = await axios.post('http://127.0.0.1:8000/token/refresh/', {refreshToken});
+            const response = await axios.post(axiosConfig.refreshTokenURL, {refreshToken});
             // don't use axious instance that already configured for refresh token api call
             const newAccessToken = response.data.accessToken;
             localStorage.setItem('access_token', newAccessToken);  //set new access token

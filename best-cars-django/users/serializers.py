@@ -34,3 +34,15 @@ class LoginSerializer(serializers.Serializer):
         if user is None:
             raise serializers.ValidationError("Invalid credentials")
         return user
+    
+class UserProfileUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username','email', 'phone_number', 'first_name', 'last_name']
+        extra_kwargs = {
+            'username' : {'required' : True},
+            'email': {'required': False},
+            'phone_number': {'required': False},
+            'first_name': {'required': False},
+            'last_name': {'required': False},
+        }

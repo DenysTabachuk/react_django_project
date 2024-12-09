@@ -4,7 +4,7 @@ import Footer from '../../components/Footer/Footer.js';
 import "./RegisterAndLogin.css";
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-
+import { validatePhoneNumber } from '../../validation/UserInfoValidation.js';
 
 export default function Login(){
     const [formData, setFormData] = useState({
@@ -13,15 +13,30 @@ export default function Login(){
     });
 
     const [message, setMessage] = useState('');
+    const [phoneErrorMessage, setPhoneErrorMessage] = useState('');
     const navigate = useNavigate();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+
     const handleSubmit = async (e) => {
-        console.log("submit");
         e.preventDefault();
+
+        setMessage('');
+        setPhoneErrorMessage('');
+
+        if (formData.phone_number == '' || formData.password == ''){
+            setMessage("Поля не можуть бути пустими");
+            return;
+        }
+
+        if (!validatePhoneNumber(formData.phone_number)) {
+            setPhoneErrorMessage('Невірний формат номера телефону');
+            return;
+        }
+
         try {
             const response = await axios.post('http://127.0.0.1:8000/api/users/login/', formData);
             const { message, access_token, refresh_token } = response.data;
@@ -35,10 +50,15 @@ export default function Login(){
             navigate('/');
 
         } catch (error) {
+            console.log(error.response.data);
+            if (error.response.data.non_field_errors && error.response.data.non_field_errors.length === 1 
+                && error.response.data.non_field_errors[0] === "Invalid credentials") {
+                setMessage("Користувача з таким номером та паролем не знайдено. Спробуйте ще раз.");
+                return;
+            }
             setMessage('Error: ' + JSON.stringify(error.response.data));
         }
     };
-
 
     return (
         <>
@@ -55,6 +75,7 @@ export default function Login(){
                         value={formData.phone_number}
                         onChange={handleChange}
                     />
+                    <span className='error-text'>{ phoneErrorMessage != '' && phoneErrorMessage}</span>
                 </div>
                 <div className='input-container'>
                     <label>Пароль:</label>
@@ -66,6 +87,9 @@ export default function Login(){
                         onChange={handleChange}
                     />
                 </div>
+
+                <span className='error-text'>{message && <p>{message}</p>}</span>
+
                 <br />
                 <Link to = '/register'><span className='link-text'>Немає облікового запису ? Зареєструватися</span></Link>
                 <br />
@@ -74,13 +98,11 @@ export default function Login(){
                         <input type="checkbox" />
                         <span>Запам'ятати мене</span>
                 </div>
+
+                <div className="register-login-button-container">
+                    <button type="submit" onClick={handleSubmit}>Увійти</button>
+                </div>
             </form>
-            <div className="register-login-button-container">
-                <button type="submit" onClick={handleSubmit}>Увійти</button>
-            </div>
-
-            {message && <p>{message}</p>}
-
         </div>
         <Footer></Footer>
         </>

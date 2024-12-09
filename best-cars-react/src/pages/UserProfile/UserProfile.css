@@ -4,13 +4,13 @@
 
 #profile-info-container{
     display: flex;
-    gap: 40px;
-
+    gap: 20px;
+    flex-wrap:  wrap;
 }
 
 .profile-info-item{
     border: 1px solid gray;
-    padding: 40px;
+    padding: 25px;
 }
 
 .profile-info-button-container{
