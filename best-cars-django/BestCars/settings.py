@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -146,3 +147,7 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,                  # Не буде змінювати refresh token після кожного використання
     'BLACKLIST_AFTER_ROTATION': False,               # Не буде додавати refresh token до чорного списку після оновлення
 }
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

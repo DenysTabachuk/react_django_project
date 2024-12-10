@@ -4,6 +4,7 @@ import CarInfo from "./pages/CarInfo/CarInfo.js";
 import Register from './pages/RegisterAndLogin/Register.js';
 import Login from './pages/RegisterAndLogin/Login.js';
 import UserProfile from './pages/UserProfile/UserProfile.js';
+import AddNewCar from './pages/AddNewCar/AddNewCar.js';
 
 import {
   BrowserRouter as Router,
@@ -21,6 +22,8 @@ const App = () => {
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/user-profile" element={<UserProfile />} />
+          <Route exact path="/add-car" element={<AddNewCar />} />
+
       </Routes>
     </Router>
   );
