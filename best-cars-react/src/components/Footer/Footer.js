@@ -3,17 +3,17 @@ import "./Footer.css"
 const socialMedia = [
     {
         name : "Instagram",
-        icon : "icons/instagram.png",
+        icon : "/icons/instagram.png",
         url : ""
     },
     {
         name : "Facebook",
-        icon : "icons/facebook.png",
+        icon : "/icons/facebook.png",
         url : ""
     },
     {
         name : "Twitter",
-        icon : "icons/twitter.png",
+        icon : "/icons/twitter.png",
         url : ""
     }
 ]
@@ -23,7 +23,7 @@ export default function Footer(){
         <footer>
             <div id="social-media-icon-container">
                 {socialMedia.map( (sm) => 
-                <a href="#">
+                <a href="#" key={sm.name}>
                     <img className="icon"src={sm.icon} alt={sm.name}></img>
                 </a>
                 )}

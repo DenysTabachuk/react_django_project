@@ -1,0 +1,167 @@
+#add-new-car{
+    margin: 0 280px 40px 200px;
+}
+
+#column-container{
+    display: flex;
+    justify-content: space-between;
+}
+
+.added-image-container, #plus-image{
+    border: 2px solid gray;
+    border-radius: 20px;
+    height: 200px;
+    position: relative;
+}
+
+.added-image-container .added-image {
+    height: 100%;
+}
+
+.delete-image-icon{
+    position: absolute;
+    bottom:  80%;
+    left: 80%;
+    height: 20px;
+}
+
+#add-new-car label {
+    font-size: larger;
+}
+
+input[type="text"], input[type="number"] {
+    width: 80%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid gray;
+  }
+
+#add-new-car textarea{
+    min-height: 300px;
+    width: 83%;
+    border-radius: 5px;
+}
+
+#plus-image{
+    height: 200px;
+}
+
+#input-main-photo{
+    display: none;
+}
+
+#additional-images-container, #main-image-container{
+    display: flex;
+}
+
+#add-car-button-container{
+    display: flex;
+    justify-content: center;
+}
+
+#add-car-button{
+    padding: 15px;
+    width: 33%;
+    border-radius: 15px;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+}
+
+/* price  */
+table{
+    width: 80%; 
+    border-collapse: collapse;
+}
+
+th,td{
+    border-bottom: 1px solid black;
+    padding: 10px;
+    text-align: left;
+}
+
+.cell-input-container{
+    padding: 2px;
+}
+
+.price-input{
+    margin: 0  !important;
+    padding: 8px;
+}
+
+.cell-button-container{
+    display: flex;
+    justify-content: end;
+}
+
+.edit-price-button{
+    padding: 8px 12px 8px 12px;
+    background-color: black;
+    border-radius: 15px;
+    font-weight: bold;
+    color: white;
+}
+
+/* Add Functions  */
+
+#input-function-container{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#cancel-action-button,  #add-function-button{
+    border: 1px solid gray;
+    padding: 12px;
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+}
+
+#add-function-button{
+    background-color: rgb(10, 99, 10);
+}
+
+#add-function-image{
+    height: 50px;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+.func-container{
+    position: relative;
+    padding: 15px;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bin-icon-container{
+    box-sizing: border-box;
+    height: 100%;
+    padding: 8px 4px 0px 4px;
+    background-color: red;
+    border-left: 1px solid black;
+    position: absolute; /* Ігноруємо padding */
+    top: 0;
+    right:  0;
+}
+
+
+/* add main image  */
+
+#add-main-img{
+    height: 200px;
+    border-radius: 20px;
+    border: 1px solid gray;
+}
+
+#add-additional-img{
+    height: 180px;
+    border-radius: 20px;
+    border: 1px solid gray;
+}

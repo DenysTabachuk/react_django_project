@@ -30,16 +30,16 @@ export default function Header(){
                 <li><Link to = '/'>Компанія</Link></li>
                 <li><Link to = '/'>Контакти</Link></li>
                 <li><Link to = '/car-rent'>Оформлення (тимчасово)</Link></li>
-                <li><Link to = '/car-info'>Інформація про авто (тимчасово)</Link></li>
+                <li><Link to = '/add-car'>Створити нове оголошення</Link></li>
 
-                {isTokenValid(accessToken) ? 
+                {/* {isTokenValid(accessToken) ? 
                     <li id="my-profile"><Link to='/user-profile'><span>Мій профіль</span></Link></li>
                 : 
                     <>
                         <li id="sign-in"><Link to='/login'><span>Увійти</span></Link></li>
                         <li id="sign-up"><Link to='/register'><span>Зареєструватися</span></Link></li>  
                     </>
-                }
+                } */}
 
             </ul>
         </navbar>

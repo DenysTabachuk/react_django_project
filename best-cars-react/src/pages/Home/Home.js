@@ -1,15 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import React from 'react';
 import Header from '../../components/Header/Header.js';
 import Select from '../../components/CarCard/Select.js';
 import CarCard from '../../components/CarCard/CarCard.js';
 import Footer from '../../components/Footer/Footer.js';
+import {convertToCamelCase} from "../../utils/index.js"
 
 import "./Home.css"
 
 const Home = () => {
-
-
+  const [cars, setCars] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState( {
     selectedCar : "",
     selectedFuel : "",
@@ -20,21 +20,25 @@ const Home = () => {
   const fuelTypes = ["Бензин", "Електро", "Дизель", "Гібрид"];
   const carClasses = ["Економ", "Бізнес", "Середній"];
 
-  const cars = [ {
-    name : "Mercedes GLS",
-    prices : [390, 350, 325 ,250],
-    additionalFunctions : [ "Датчик світла", "Задня камера", "Клімат-контроль", 
-      "Круїз контроль", "Мультимедіа система з LCD-екрано", "Мультифункціональне кермо"],
-    mainImage : "/assets/mercedes_gls.webp"
-  },
-  {
-    name : "Mercedes GLS",
-    prices : [390, 350, 325 ,250],
-    additionalFunctions : [ "Датчик світла", "Задня камера", "Клімат-контроль", 
-      "Круїз контроль", "Мультимедіа система з LCD-екрано", "Мультифункціональне кермо"],
-    mainImage : "/assets/mercedes_gls.webp"
-  }
-  ]
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/cars/")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch cars");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        let convertedCars = [];
+        data.forEach((car) => {
+          convertedCars =  [ ...convertedCars , convertToCamelCase(car)];
+        });
+        setCars(convertedCars)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   const handleCarChange = (event) => {
     const selectedFiltersCopy = { ...selectedFilters };
@@ -50,7 +54,6 @@ const Home = () => {
     const selectedFiltersCopy = { ...selectedFilters };
     setSelectedFilters(selectedFiltersCopy.carClass = event.target.value);
   }
-
 
   return (
     <>
@@ -84,12 +87,11 @@ const Home = () => {
     </div>
 
     <div id="car-cards-container">
-      { cars.map( (car) => <CarCard carObject={car}></CarCard> )}
+      { cars.map( (car) => <CarCard carObject={car} key={car.name}></CarCard> )}
 
     </div>
 
     <Footer></Footer>
-
     </>
   );
 };

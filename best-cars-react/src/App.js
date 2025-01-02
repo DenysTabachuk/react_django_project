@@ -4,7 +4,7 @@ import CarInfo from "./pages/CarInfo/CarInfo.js";
 import Register from './pages/RegisterAndLogin/Register.js';
 import Login from './pages/RegisterAndLogin/Login.js';
 import UserProfile from './pages/UserProfile/UserProfile.js';
-import AddNewCar from './pages/AddNewCar/AddNewCar.js';
+import AddOrEditCar from './pages/AddOrEditCar/AddOrEditCar.js';
 
 import {
   BrowserRouter as Router,
@@ -22,8 +22,9 @@ const App = () => {
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/user-profile" element={<UserProfile />} />
-          <Route exact path="/add-car" element={<AddNewCar />} />
-
+          <Route exact path="/add-car" element={<AddOrEditCar />} />
+          <Route exact path="/edit-car/:id" element={<AddOrEditCar />} />
+          <Route path="/cars/:id" element={<CarInfo />} /> {/* Сторінка про авто */}
       </Routes>
     </Router>
   );

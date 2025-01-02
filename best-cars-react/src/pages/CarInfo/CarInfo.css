@@ -1,16 +1,18 @@
 #car-info-container{
     padding: 0 20px 40px 20px;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
-#column1{
+#car-info-container #column1{
     width: 65%;
 }
 
-#column2{
-
+#car-info-container #column2{
    margin: 75px 0px 40px 20px;
+   display: flex;
+   align-items: center;
+   flex-direction: column;
 }
 
 #main-characteristics-container{
@@ -44,4 +46,23 @@
 
 #description-continaer p {
     margin-left: 20px;
+}
+
+#delete-button, #edit-button{
+    border: 2px solid black;
+    background-color: red;
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-top: 20px;
+}
+
+#edit-button{
+    background-color: rgb(91, 189, 91);
+}
+
+.button-container{
+    display: flex;
+    justify-content: space-around;
 }
