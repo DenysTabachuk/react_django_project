@@ -31,7 +31,7 @@ export default function AddAdditionalImages({carDataObj, setCarData}) {
                 <img
                     className="delete-image-icon"
                     src="/icons/bin.png"
-                    alt=""
+                    alt="delete image icon"
                     onClick={() => handleDeleteImage(index)}
                     />
 

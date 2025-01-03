@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import { validatePassword, validatePhoneNumber } from '../../validation/UserInfoValidation.js';
 
 export default function Register() {
+    const [showPassword, setShowPassword] = useState(false);
+
     const [formData, setFormData] = useState({
         phone_number: '',
         password: '',
@@ -20,6 +22,10 @@ export default function Register() {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+
+    const handleCheckboxChange = () => {
+        setShowPassword(prevState => !prevState);
+      };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -37,7 +43,7 @@ export default function Register() {
             setPasswordErrorMessage('Пароль повинен містити хоча б одну велику літеру і одну цифру, мінімум 6 символів');
             return;
         }
-        if (formData.password !== formData.confirmPassword) {
+        if (formData.password !== formData.confirm_password) {
             setPasswordErrorMessage('Паролі не співпадають');
         }
 
@@ -48,7 +54,14 @@ export default function Register() {
             setMessage(response.data.message);
         } 
         catch (error) {
-            setMessage('Error: ' + JSON.stringify(error.response.data));
+            console.log(error.response.data);
+            console.log(JSON.stringify(error.response.data));
+            if (error.response.data['phone_number']){
+                setPhoneErrorMessage(error.response.data['phone_number'][0]);
+            }
+            else{
+                setMessage('Error: ' + JSON.stringify(error.response.data));
+            }
         }
     };
 
@@ -68,13 +81,13 @@ export default function Register() {
                         value={formData.phone_number}
                         onChange={handleChange}
                     />
-                    <span className='error-text'>{ phoneErrorMessage != '' && phoneErrorMessage}</span>
+                    <span className='error-text'>{ phoneErrorMessage !== '' && phoneErrorMessage}</span>
                 </div>
                 <div className='input-container'>
                     <label>Пароль:</label>
                     <br />
                     <input
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
@@ -85,15 +98,23 @@ export default function Register() {
                     <label>Повторити пароль:</label>
                     <br />
                     <input
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         name="confirm_password"
                         value={formData.confirm_password}
                         onChange={handleChange}
                     />
-                    <span className='error-text'>{ passwordErrorMessage != '' && passwordErrorMessage}</span>
-                
+                    <span className='error-text'>{ passwordErrorMessage !== '' && passwordErrorMessage}</span>
                 </div>
 
+                <div className="input-container">
+                    <input
+                    type="checkbox"
+                    checked={showPassword}
+                    onChange={handleCheckboxChange}
+                    />
+                    <span>Показати пароль</span>
+                </div>
+                
                 <Link to = '/login'><span className='link-text'>Вже зареєстровані ?</span></Link>
                 <br />
 

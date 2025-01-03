@@ -5,6 +5,6 @@ export const validatePhoneNumber = (phoneNumber) => {
 
 
 export const validatePassword = (password) => {
-    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/; // Мінімум 6 символів, одна велика літера, одна цифра
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+={}\[\]:;"'<>,.?/\\|`~\-]{6,}$/;
     return passwordRegex.test(password);
 };

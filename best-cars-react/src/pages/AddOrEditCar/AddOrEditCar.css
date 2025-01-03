@@ -1,11 +1,23 @@
-#add-new-car{
-    margin: 0 280px 40px 200px;
-}
-
 #column-container{
     display: flex;
-    justify-content: space-between;
 }
+
+#column-container #column1{
+    width: 35%;
+}
+
+#column-container #column2{
+    width: 65%;
+}
+
+#column-container #column2{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+/* add additional images */
 
 .added-image-container, #plus-image{
     border: 2px solid gray;
@@ -18,10 +30,14 @@
     height: 100%;
 }
 
+.added-image-container, #add-additional-img{
+    margin: 10px;
+}
+
 .delete-image-icon{
     position: absolute;
     bottom:  80%;
-    left: 80%;
+    left: 90%;
     height: 20px;
 }
 
@@ -53,14 +69,16 @@ input[type="text"], input[type="number"] {
 
 #additional-images-container, #main-image-container{
     display: flex;
+    flex-wrap: wrap;
 }
 
 #add-car-button-container{
     display: flex;
     justify-content: center;
+    margin: 40px 0px 40px 0;
 }
 
-#add-car-button{
+#add-edit-car-button{
     padding: 15px;
     width: 33%;
     border-radius: 15px;
@@ -164,4 +182,17 @@ th,td{
     height: 180px;
     border-radius: 20px;
     border: 1px solid gray;
+}
+
+
+
+@media (max-width: 768px) {
+    #column-container {
+        flex-direction: column; /* для мобільного вигляду */
+    }
+
+    #column-container #column1{
+        width: 100%;
+    }
+   
 }

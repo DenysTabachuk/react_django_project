@@ -55,6 +55,11 @@ export default function CarInfo(){
         });
     }
 
+
+    const handleEdit = () => {
+        navigate(`/edit-car/${id}`);
+    }
+
     if (!car) return <div>Завантаження...</div>;
 
 
@@ -122,7 +127,7 @@ export default function CarInfo(){
                     <h2 className='centered-text'>Управління оголошенням</h2>
                     <div className="button-container">
                         <button id = "delete-button" onClick={handleDelete}>Видалити оголошення</button>
-                        <button id = "edit-button" onClick={handleDelete}>Редагувати оголошення</button>
+                        <button id = "edit-button" onClick={handleEdit}>Редагувати оголошення</button>
                     </div>
                  </div>
             </div>

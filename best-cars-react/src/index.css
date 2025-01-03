@@ -6,3 +6,23 @@ body{
   text-align: center;
 }
 
+#page-content{
+  margin: 20px 3% 80px 3%;
+  min-height: 400px;
+}
+
+a.no-decoration-link{
+  text-decoration: none;
+  color: black;
+}
+
+.unstyled-list {
+  list-style: none;
+  font-style: normal;
+}
+
+.icon-text-item{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}

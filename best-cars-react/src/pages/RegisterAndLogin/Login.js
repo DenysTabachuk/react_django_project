@@ -7,6 +7,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { validatePhoneNumber } from '../../validation/UserInfoValidation.js';
 
 export default function Login(){
+    const [showPassword, setShowPassword] = useState(false);
+
     const [formData, setFormData] = useState({
         phone_number: '',
         password: ''
@@ -19,6 +21,12 @@ export default function Login(){
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+
+    const handleCheckboxChange = () => {
+        setShowPassword(prevState => !prevState);
+    };
+
+    
 
 
     const handleSubmit = async (e) => {
@@ -39,12 +47,13 @@ export default function Login(){
 
         try {
             const response = await axios.post('http://127.0.0.1:8000/api/users/login/', formData);
-            const { message, access_token, refresh_token } = response.data;
+            const { message, access_token, refresh_token, is_admin } = response.data;
             setMessage(response.data.message);
 
             if (access_token && refresh_token) {
                 localStorage.setItem('access_token', access_token);
                 localStorage.setItem('refresh_token', refresh_token);
+                localStorage.setItem('is_admin', is_admin);
             }
           
             navigate('/');
@@ -77,15 +86,27 @@ export default function Login(){
                     />
                     <span className='error-text'>{ phoneErrorMessage != '' && phoneErrorMessage}</span>
                 </div>
+
                 <div className='input-container'>
                     <label>Пароль:</label>
                     <br />
                     <input
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
                     />
+                </div>
+
+                <div className="input-container">
+                    <div className="input-container">
+                        <input
+                        type="checkbox"
+                        checked={showPassword}
+                        onChange={handleCheckboxChange}
+                        />
+                        <span>Показати пароль</span>
+                    </div>
                 </div>
 
                 <span className='error-text'>{message && <p>{message}</p>}</span>

@@ -31,7 +31,7 @@ const optionsAndServices = [ {
 ]
 
 const paymetMethods = [{
-        icon: "icons/car-rent-registration/credit-card.png",
+        icon: "icons/credit-card.png",
         name:"Картою",
         discount: 10
     },
@@ -105,7 +105,7 @@ export default function CarRentRegistration(){
                         
                         <div id="payment-methods-container">
                         { paymetMethods.map( (method, index) =>
-                            <div class="payment-method">{
+                            <div className="payment-method">{
                                 <>
                                 <div className = "payment-method-option">
                                     <div className = "radio-icon-name">

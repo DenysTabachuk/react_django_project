@@ -35,6 +35,7 @@ export default function AddMainImage({carDataObj, setCarData}){
                 <img
                 className="added-image"
                 src={carDataObj.mainImage}
+                alt=""
                 ></img>
             </div>
             </>) :

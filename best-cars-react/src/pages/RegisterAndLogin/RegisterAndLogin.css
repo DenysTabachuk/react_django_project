@@ -22,7 +22,9 @@
     font-size: large;
 }
 
-.register-login-container input{
+.register-login-container input[type="text"],
+.register-login-container input[type="number"],
+.register-login-container input[type="password"]{
     padding: 8px;
     width: 90%;
     border: 1px solid gray;
@@ -64,3 +66,9 @@
     width: 15px;
 
 }
+
+@media screen and (max-width: 1024px) {
+    .register-login-container{
+        width: 80%;
+    }
+  }

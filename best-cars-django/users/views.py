@@ -22,6 +22,7 @@ class LoginView(APIView):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data
+            is_admin = user.groups.filter(name='admin').exists()  
             login(request, user)
 
             refresh = RefreshToken.for_user(user)
@@ -29,7 +30,8 @@ class LoginView(APIView):
             return Response({
                         "message": "Login successful",
                         "access_token": access_token,
-                        "refresh_token": str(refresh)
+                        "refresh_token": str(refresh),
+                        'is_admin' : is_admin
                     })
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     

@@ -12,6 +12,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = [ 'phone_number', 'password']
 
+    def validate_phone_number(self, value):
+        if User.objects.filter(phone_number=value).exists():
+            raise serializers.ValidationError('Користувач з таким номером телефона вже зареєстрований.')
+        return value
+
     def create(self, validated_data):
       
         username   = "user" + validated_data['phone_number']

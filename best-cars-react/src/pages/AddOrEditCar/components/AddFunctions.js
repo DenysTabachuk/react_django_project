@@ -24,7 +24,7 @@ export default function AddFunctions({carDataObj, setCarData}){
 
     const handleDeleteFunction = (key) => {
         setCarData({...carDataObj,
-            additionalFunctions : carDataObj.additionalFunctions.filter(item => item != key)
+            additionalFunctions : carDataObj.additionalFunctions.filter(item => item !== key)
         })
     }
 
