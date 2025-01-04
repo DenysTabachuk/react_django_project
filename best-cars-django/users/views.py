@@ -42,6 +42,7 @@ class UserProfileView(APIView):
     def get(self, request):
         user = request.user  # Отримуємо користувача з request (він автоматично розпізнається через токен)
         profile_data = {
+            'id': user.id,
             'username': user.username,
             'email': user.email,
             'phone_number': user.phone_number,

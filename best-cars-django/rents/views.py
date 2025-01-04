@@ -1,7 +1,22 @@
-from rest_framework.viewsets import ModelViewSet
-from .models import Rental
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from .serializers import RentalSerializer
+from rest_framework.permissions import IsAuthenticated
 
-class RentalViewSet(ModelViewSet):
-    queryset = Rental.objects.all()
-    serializer_class = RentalSerializer
+class RentalView(APIView):
+    permission_classes = [IsAuthenticated]  # Перевірка, чи користувач авторизований
+
+    def post(self, request, *args, **kwargs):
+        """Створення нової оренди."""
+        data = request.data
+        data['user'] = request.user.id
+        print(data)
+
+        serializer = RentalSerializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
