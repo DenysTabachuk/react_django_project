@@ -48,6 +48,7 @@ class UserProfileView(APIView):
             'first_name': user.first_name, 
             'last_name': user.last_name,   
         }
+        print("Profile data", profile_data)
         return Response(profile_data)
     
     def patch(self, request):

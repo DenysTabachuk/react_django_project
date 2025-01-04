@@ -20,7 +20,7 @@ const App = () => {
     <Router>
       <Routes>
           <Route exact path="/" element={<Home />} />
-          <Route exact path="/car-rent" element={<CarRentRegistration />} />
+          <Route exact path="/car-rent/:id" element={<CarRentRegistration />} />
           <Route exact path="/car-info" element={<CarInfo />} />
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/login" element={<Login />} />
@@ -31,9 +31,6 @@ const App = () => {
           <Route path="/contact-info" element={<ContactInformation />} /> 
           <Route path="/terms-of-rent" element={<TermsOfRent />} /> 
           <Route path="/about-company" element={<AboutCompany />} /> 
-
-
-
       </Routes>
     </Router>
   );

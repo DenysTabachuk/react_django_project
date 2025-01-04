@@ -1,9 +1,6 @@
-import { useNavigate } from 'react-router-dom';
 import "./CarCard.css"
 
-export default function CarCard({carObject}){
-    const navigate = useNavigate();
-
+export default function CarCard({carObject, customButton}){
     console.log("car: ", carObject);
     return (
         <div className="car-card">
@@ -23,8 +20,14 @@ export default function CarCard({carObject}){
                 </div>
                 )}
             </div>
+
+            {customButton && (
+                <div className="custom-button-container">
+                    {customButton}
+                </div>
+            )}
             
-            <button className='rent-button' onClick={() => navigate(`/cars/${carObject.id}`)}>Переглянути деталі</button>
+         
         </div>
     );
 }

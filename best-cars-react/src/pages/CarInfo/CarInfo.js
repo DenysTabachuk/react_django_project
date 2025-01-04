@@ -9,6 +9,7 @@ import "./CarInfo.css"
 
 
 export default function CarInfo(){
+    const isAdmin = localStorage.getItem("is_admin") === "true"; 
     const { id } = useParams();
     const [car, setCar] = useState(null);
     const navigate = useNavigate();
@@ -101,7 +102,7 @@ export default function CarInfo(){
                         <ul>
                         {car.additionalFunctions.map((func, index) => 
                             <li key={index}>
-                                <img src="/icons/car-info/check-mark.png" alt="" className="icon" />
+                                <img src="/icons/check-mark.png" alt="" className="icon" />
                                 <span>{func}</span>
                             </li>
                             )}
@@ -120,16 +121,23 @@ export default function CarInfo(){
                     width : '70%',
                     margin: "80px"
                  }}>
-                    <CarCard carObject={car}></CarCard>
+                    <CarCard carObject={car} customButton = {
+                        <button className='rent-button'
+                        onClick={() => navigate(`/car-rent/${car.id}`)}
+                        >Орендувати</button>    
+                    }>
+                    </CarCard>
                 </div>
 
-                 <div id="ad-managment">
+                { isAdmin && 
+                    <div id="ad-managment">
                     <h2 className='centered-text'>Управління оголошенням</h2>
                     <div className="button-container">
                         <button id = "delete-button" onClick={handleDelete}>Видалити оголошення</button>
                         <button id = "edit-button" onClick={handleEdit}>Редагувати оголошення</button>
                     </div>
-                 </div>
+                    </div>
+                }
             </div>
         </div>
 

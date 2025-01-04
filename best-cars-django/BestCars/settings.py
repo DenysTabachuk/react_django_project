@@ -30,7 +30,8 @@ INSTALLED_APPS = [
     'cars',
     'rest_framework',
     'corsheaders',
-    'users'
+    'users',
+    'rents'
 ]
 
 MIDDLEWARE = [

@@ -9,6 +9,7 @@ body{
 #page-content{
   margin: 20px 3% 80px 3%;
   min-height: 400px;
+  font-size: 1.2rem;
 }
 
 a.no-decoration-link{

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import Header from '../../components/Header/Header.js';
 import Select from '../../components/CarCard/Select.js';
@@ -9,6 +10,7 @@ import {convertToCamelCase} from "../../utils/index.js"
 import "./Home.css"
 
 const Home = () => {
+  const navigate = useNavigate();
   const [cars, setCars] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState( {
     selectedCar : "",
@@ -87,7 +89,16 @@ const Home = () => {
     </div>
 
     <div id="car-cards-container">
-      { cars.map( (car) => <CarCard carObject={car} key={car.name}></CarCard> )}
+      { cars.map( (car) => <CarCard 
+        carObject={car} 
+        key={car.name}
+        customButton={    
+        <button 
+          className='rent-button' 
+          onClick={() => navigate(`/cars/${car.id}`)}>
+            Переглянути деталі
+        </button> }
+      ></CarCard> )}
 
     </div>
 

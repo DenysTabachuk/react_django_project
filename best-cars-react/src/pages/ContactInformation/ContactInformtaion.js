@@ -8,7 +8,7 @@ export default function ContactInformation(){
          <Header></Header>
           <div id="page-content">
             <h1 className="centered-text">Контактна інформація</h1>
-            <p>Будь ласка, не телефонуйте в неробочий час, працівники теж люди і потребують відпочинку !!! З любов'ю ваші BestCars.</p>
+            <p><big>Будь ласка, не телефонуйте в неробочий час, працівники теж люди і потребують відпочинку !!! З любов'ю ваші BestCars.</big></p>
             <address>
                 <div className="contact-info-item">
                     <b><big>Телефони: </big></b>

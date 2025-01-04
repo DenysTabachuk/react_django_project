@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import "./Header.css"
 
 import { jwtDecode } from "jwt-decode";
+import { refreshExpiredToken } from '../../api/refreshToken';
 
 
 
@@ -9,18 +10,28 @@ function isTokenValid(token) {
     if (!token) return false;
     try {
         const decoded = jwtDecode(token);
-        return decoded.exp * 1000 > Date.now(); // Перевіряємо, чи не протермінований токен
+        return decoded.exp * 1000 > Date.now();
     } catch (error) {
-        return false; // Якщо токен некоректний
+        return false;
     }
 }
 
 
+
+
 export default function Header(){
-    const accessToken = localStorage.getItem("access_token");
+    let accessToken = localStorage.getItem("access_token");
+    let refreshToken = localStorage.getItem("refresh_token");
     const isAdmin = localStorage.getItem("is_admin") === "true"; 
 
     console.log(isAdmin);
+
+    if (!isTokenValid(accessToken)){
+        refreshExpiredToken(refreshToken);
+        console.log("Token refresheed");
+        accessToken = localStorage.getItem("access_token");
+    }
+    
 
     return (
         <header>
@@ -32,7 +43,6 @@ export default function Header(){
                 <li><Link to = '/terms-of-rent'>Умови</Link></li>
                 <li><Link to = '/about-company'>Компанія</Link></li>
                 <li><Link to = '/contact-info'>Контакти</Link></li>
-                <li><Link to = '/car-rent'>Оформлення (тимчасово)</Link></li>
 
                 {isAdmin &&  <li><Link to = '/add-car'>Створити нове оголошення</Link></li>}
     
