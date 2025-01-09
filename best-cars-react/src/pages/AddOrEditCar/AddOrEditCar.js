@@ -1,20 +1,20 @@
 import Header from "../../components/Header/Header.js";
 import Footer from "../../components/Footer/Footer.js";
-import React, { useState, useEffect  } from "react";
-import {  useNavigate, useParams  } from 'react-router-dom'
-import PriceTable from "./components/PriceTable.js"
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import PriceTable from "./components/PriceTable.js";
 import AddFunctions from "./components/AddFunctions.js";
 import AddMainImage from "./components/AddMainImage.js";
 import AddAdditionalImages from "./components/AddAdditionalImages.js";
 import { convertToSnakeCase, convertToCamelCase } from "../../utils/index.js";
 import "./AddOrEditCar.css";
 
-
 const AddCarForm = () => {
-  const isAdmin =  localStorage.getItem("is_admin");
+  let accessToken = localStorage.getItem("access_token");
+  const isAdmin = localStorage.getItem("is_admin");
 
   const navigate = useNavigate();
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [isEditing, setIsEditing] = useState(false);
   const [carData, setCarData] = useState({
     name: "",
@@ -46,50 +46,53 @@ const AddCarForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const dataToSend = convertToSnakeCase(carData);
-    dataToSend.prices = dataToSend.prices.map(price => ({
+    dataToSend.prices = dataToSend.prices.map((price) => ({
       range: price.range,
       price: price.price,
     }));
 
     const formData = new FormData();
-    Object.keys(dataToSend).forEach(key => {
-      if  (key ===  "additional_images") {
+    Object.keys(dataToSend).forEach((key) => {
+      if (key === "additional_images") {
         dataToSend.additional_images.forEach((image, index) => {
           formData.append(`additional_images[${index}]`, image);
         });
         // dataToSend.additional_images.forEach((image) => {
-        //   formData.append("additional_images", image);  
+        //   formData.append("additional_images", image);
         // });
-      }
-      else{
-        const value = key === "additional_functions" || key === "prices" ? JSON.stringify(dataToSend[key]) : dataToSend[key] ;
-        formData.append(key, value)
+      } else {
+        const value =
+          key === "additional_functions" || key === "prices"
+            ? JSON.stringify(dataToSend[key])
+            : dataToSend[key];
+        formData.append(key, value);
       }
     });
 
-    fetch('http://localhost:8000/cars/', {
-      method: 'POST',
+    fetch("http://localhost:8000/cars/", {
+      method: "POST",
       body: formData,
+      headers: {
+        Authorization: `Bearer ${accessToken}`, // Токен для аутентифікації
+      },
     })
-    .then(response => {
-      if (response.status === 201) { 
-        navigate('/'); 
-        window.location.reload();
-      }
-    })
-    .then(data => {
-      console.log("Response data: ", data);
-
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+      .then((response) => {
+        if (response.status === 201) {
+          navigate("/");
+          window.location.reload();
+        }
+      })
+      .then((data) => {
+        console.log("Response data: ", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
-  
 
   useEffect(() => {
     if (id) {
-      setIsEditing(true); 
+      setIsEditing(true);
       fetch(`http://localhost:8000/cars/${id}/`)
         .then((response) => response.json())
         .then((data) => {
@@ -100,18 +103,15 @@ const AddCarForm = () => {
     }
   }, [id]);
 
-  
-
   return (
     <>
       <Header></Header>
       <div id="page-content">
-
-      {isAdmin ? 
+        {isAdmin ? (
           <>
             <h1 className="centered-text">Створення нового оголошення</h1>
-  
-            <form  onSubmit={handleSubmit}  id="add-new-car-form">
+
+            <form onSubmit={handleSubmit} id="add-new-car-form">
               <div id="column-container">
                 <div id="column1">
                   {/* car name */}
@@ -125,8 +125,8 @@ const AddCarForm = () => {
                       onChange={handleChange}
                     />
                   </div>
-  
-                    {/* Gear Box Radio Buttons */}
+
+                  {/* Gear Box Radio Buttons */}
                   <div className="input-container">
                     <label>Коробка передач</label>
                     <br />
@@ -147,7 +147,7 @@ const AddCarForm = () => {
                     />{" "}
                     Автомат
                   </div>
-  
+
                   {/* Fuel Type Radio Buttons */}
                   <div className="input-container">
                     <label>Тип пального</label>
@@ -177,7 +177,7 @@ const AddCarForm = () => {
                     />{" "}
                     Електроенергія
                   </div>
-  
+
                   {/* Consumption */}
                   <div className="input-container">
                     <label>Розхід</label>
@@ -190,7 +190,7 @@ const AddCarForm = () => {
                       onChange={handleChange}
                     />
                   </div>
-  
+
                   {/* Engine Volume */}
                   <div className="input-container">
                     <label>Об'м двигуна</label>
@@ -203,7 +203,7 @@ const AddCarForm = () => {
                       onChange={handleChange}
                     />
                   </div>
-  
+
                   {/* Engine Power  */}
                   <div className="input-container">
                     <label>Потужність двигуна</label>
@@ -215,7 +215,7 @@ const AddCarForm = () => {
                       onChange={handleChange}
                     />
                   </div>
-  
+
                   {/* Description */}
                   <div className="input-container">
                     <label>Опис</label>
@@ -227,30 +227,45 @@ const AddCarForm = () => {
                     ></textarea>
                   </div>
                 </div>
-  
+
                 <div id="column2">
-                  <AddFunctions carDataObj={carData} setCarData={setCarData}></AddFunctions>
-                  <PriceTable  carDataObj={carData} setCarData={setCarData} ></PriceTable>
-                  <AddMainImage carDataObj={carData} setCarData={setCarData}></AddMainImage>
-                  <AddAdditionalImages carDataObj={carData} setCarData={setCarData}></AddAdditionalImages>
+                  <AddFunctions
+                    carDataObj={carData}
+                    setCarData={setCarData}
+                  ></AddFunctions>
+                  <PriceTable
+                    carDataObj={carData}
+                    setCarData={setCarData}
+                  ></PriceTable>
+                  <AddMainImage
+                    carDataObj={carData}
+                    setCarData={setCarData}
+                  ></AddMainImage>
+                  <AddAdditionalImages
+                    carDataObj={carData}
+                    setCarData={setCarData}
+                  ></AddAdditionalImages>
                 </div>
               </div>
-  
-  
+
               <div id="add-car-button-container">
                 <button id="add-edit-car-button" type="submit">
-                  { isEditing ? "Редагувати оголошення" : "Додати оголошення" }
+                  {isEditing ? "Редагувати оголошення" : "Додати оголошення"}
                 </button>
               </div>
             </form>
           </>
-      :
-      <>
-        <h1>Для створення оголошення необхідні права адміністратора.</h1>
-        <p><big>Якщо ви впевнені, що у вас мають бути права адміністратора спробуйте перелогінитися на аккаунт.</big></p>
-      </>
-  
-      }
+        ) : (
+          <>
+            <h1>Для створення оголошення необхідні права адміністратора.</h1>
+            <p>
+              <big>
+                Якщо ви впевнені, що у вас мають бути права адміністратора
+                спробуйте перелогінитися на аккаунт.
+              </big>
+            </p>
+          </>
+        )}
       </div>
       <Footer></Footer>
     </>

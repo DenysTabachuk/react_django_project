@@ -1,18 +1,22 @@
-body{
+body {
   margin: 0;
 }
 
-.centered-text{
+.centered-text {
   text-align: center;
 }
 
-#page-content{
+.error-text {
+  color: red;
+}
+
+#page-content {
   margin: 20px 3% 60px 3%;
   min-height: 400px;
   font-size: 1.2rem;
 }
 
-a.no-decoration-link{
+a.no-decoration-link {
   text-decoration: none;
   color: black;
 }
@@ -22,12 +26,12 @@ a.no-decoration-link{
   font-style: normal;
 }
 
-.icon-text-item{
+.icon-text-item {
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
-textarea{
+textarea {
   resize: none;
 }

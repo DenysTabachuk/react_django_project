@@ -19,4 +19,10 @@ class RentalView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        errors = serializer.errors
+        formatted_errors = {field: ", ".join(errors[field]) for field in errors}
+        
+        return Response({
+            "message": "Створення оренди не вдалося.",
+            "errors": formatted_errors
+        }, status=status.HTTP_400_BAD_REQUEST)
