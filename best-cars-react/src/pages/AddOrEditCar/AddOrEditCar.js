@@ -7,17 +7,22 @@ import AddFunctions from "./components/AddFunctions.js";
 import AddMainImage from "./components/AddMainImage.js";
 import AddAdditionalImages from "./components/AddAdditionalImages.js";
 import { convertToSnakeCase, convertToCamelCase } from "../../utils/index.js";
+import axiosConfig from "../../api/axiosConfig.js";
 import "./AddOrEditCar.css";
 
 const AddCarForm = () => {
   let accessToken = localStorage.getItem("access_token");
   const isAdmin = localStorage.getItem("is_admin");
 
+  const [brands, setBrands] = useState([]);
+  const [carClasses, setCarClasses] = useState([]);
   const navigate = useNavigate();
   const { id } = useParams();
   const [isEditing, setIsEditing] = useState(false);
   const [carData, setCarData] = useState({
     name: "",
+    brand: "",
+    class: "",
     gearBox: "",
     fuelType: "",
     consumption: "",
@@ -51,6 +56,7 @@ const AddCarForm = () => {
       price: price.price,
     }));
 
+    console.log("Data to send:", dataToSend);
     const formData = new FormData();
     Object.keys(dataToSend).forEach((key) => {
       if (key === "additional_images") {
@@ -91,15 +97,42 @@ const AddCarForm = () => {
   };
 
   useEffect(() => {
+    const getBrands = async () => {
+      try {
+        const response = await axiosConfig.get("cars/brands/");
+        setBrands(response.data);
+        console.log("brands", response.data);
+      } catch (error) {
+        console.error("Error fetching brands data", error);
+      }
+    };
+
+    const getCarData = async () => {
+      try {
+        const response = await axiosConfig.get(`cars/${id}/`);
+        setCarData(convertToCamelCase(response.data));
+        console.log("Car data", response.data);
+      } catch (error) {
+        console.error("Error fetching car data", error);
+      }
+    };
+
+    const getCarClasses = async () => {
+      try {
+        const response = await axiosConfig.get("cars/classes/");
+        setCarClasses(response.data);
+        console.log("car classes", response.data);
+      } catch (error) {
+        console.error("Error fetching car classes data", error);
+      }
+    };
+
+    getBrands();
+    getCarClasses();
+
     if (id) {
       setIsEditing(true);
-      fetch(`http://localhost:8000/cars/${id}/`)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          setCarData(convertToCamelCase(data));
-        })
-        .catch((error) => console.error("Error fetching car data:", error));
+      getCarData();
     }
   }, [id]);
 
@@ -126,6 +159,41 @@ const AddCarForm = () => {
                     />
                   </div>
 
+                  <div className="input-container">
+                    <label>Марка </label>
+                    <br />
+
+                    <select
+                      name="brand"
+                      value={carData.brand}
+                      onChange={handleChange}
+                    >
+                      <option value="">Оберіть марку авто</option>
+                      {brands.map((brand) => (
+                        <option value={brand.id}>{brand.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="input-container">
+                    <label>Клас авто </label>
+                    <br />
+
+                    <select
+                      name="class"
+                      value={carData.class}
+                      onChange={handleChange}
+                    >
+                      <option value="">Оберіть клас авто</option>
+                      {carClasses.map((carClass) => (
+                        <option key={carClass[0]} value={carClass[0]}>
+                          {carClass[1]}{" "}
+                          {/* Виводимо назву класу, наприклад, "Бізнес" */}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
                   {/* Gear Box Radio Buttons */}
                   <div className="input-container">
                     <label>Коробка передач</label>
@@ -146,6 +214,14 @@ const AddCarForm = () => {
                       onChange={handleChange}
                     />{" "}
                     Автомат
+                    <input
+                      type="radio"
+                      name="gearBox" // Changed to match carData key
+                      value="semi-automatic"
+                      checked={carData.gearBox === "semi-automatic"}
+                      onChange={handleChange}
+                    />{" "}
+                    Напівавтоматична
                   </div>
 
                   {/* Fuel Type Radio Buttons */}

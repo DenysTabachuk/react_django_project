@@ -13,6 +13,25 @@ export default function CarInfo() {
   const [car, setCar] = useState(null);
   const navigate = useNavigate();
 
+  const carClassMap = {
+    buiness: "Бізнес",
+    economy: "Економ",
+    middle: "Середній",
+  };
+
+  const gearBoxMap = {
+    manual: "Механічна",
+    automatic: "Автоматична",
+    "semi-automatic": "Напівавтоматична",
+  };
+
+  const fuelTypeMap = {
+    petrol: "Бензин",
+    diesel: "Дизель",
+    electric: "Електричний",
+    hybrid: "Гібрид",
+  };
+
   useEffect(() => {
     fetch(`http://127.0.0.1:8000/cars/${id}/`, {
       method: "GET",
@@ -28,7 +47,8 @@ export default function CarInfo() {
       })
       .then((data) => {
         console.log("Card Data", data);
-        setCar(convertToCamelCase(data));
+        // setCar(convertToCamelCase(data));
+        setCar(data);
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
@@ -66,9 +86,10 @@ export default function CarInfo() {
       <div id="car-info-container">
         <div id="column1">
           <h1>Прокат {car.name}</h1>
+          <p className="description">{carClassMap[car.car_class]} клас</p>
 
           <CutsomSlider>
-            {car.additionalImages.map((item, index) => {
+            {car.additional_images.map((item, index) => {
               return <img key={item.id} src={item.image} alt={item.alt_text} />;
             })}
           </CutsomSlider>
@@ -81,12 +102,12 @@ export default function CarInfo() {
                   className="icon"
                   alt=""
                 />
-                <big>{car.gearBox}</big>
+                <big>{gearBoxMap[car.gear_box]}</big>
               </li>
               <li>
                 <img src="/icons/car-info/fuel.png" className="icon" alt="" />
                 <big>
-                  {car.fuelType}/{car.consumption}
+                  {fuelTypeMap[car.fuel_type]}/{car.consumption}
                 </big>
               </li>
               <li>
@@ -96,7 +117,7 @@ export default function CarInfo() {
                   alt=""
                 />
                 <big>
-                  {car.engineVolume} л {car.enginePower} к.с.
+                  {car.engine_volume} л {car.engine_power} к.с.
                 </big>
               </li>
             </ul>
@@ -106,7 +127,7 @@ export default function CarInfo() {
             <h2>Додаткові функції</h2>
             <div id="additional-functions-container">
               <ul>
-                {car.additionalFunctions.map((func, index) => (
+                {car.additional_functions.map((func, index) => (
                   <li key={index}>
                     <img src="/icons/check-mark.png" alt="" className="icon" />
                     <span>{func}</span>

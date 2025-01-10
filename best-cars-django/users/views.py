@@ -7,6 +7,9 @@ from django.contrib.auth import login
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 
+from rents.models import Rental
+from rents.serializers import RentalGetSerializer
+
 
 class RegisterView(APIView):
     def post(self, request):
@@ -41,6 +44,9 @@ class UserProfileView(APIView):
 
     def get(self, request):
         user = request.user  # Отримуємо користувача з request (він автоматично розпізнається через токен)
+        rentals = Rental.objects.filter(user=request.user)
+        rentals_serializer = RentalGetSerializer(rentals, many=True, context={'request': request})
+        print(rentals_serializer.data[0])
         profile_data = {
             'id': user.id,
             'username': user.username,
@@ -48,8 +54,8 @@ class UserProfileView(APIView):
             'phone_number': user.phone_number,
             'first_name': user.first_name, 
             'last_name': user.last_name,   
+            'rentals': rentals_serializer.data
         }
-        print("Profile data", profile_data)
         return Response(profile_data)
     
     def patch(self, request):

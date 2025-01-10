@@ -17,8 +17,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Користувач з таким номером телефона вже зареєстрований.')
         return value
 
-    def create(self, validated_data):
-      
+    def create(self, validated_data):      
         username   = "user" + validated_data['phone_number']
 
         user = User.objects.create_user(

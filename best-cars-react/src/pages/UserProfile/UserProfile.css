@@ -1,47 +1,46 @@
-#user-profile{
-    margin: 40px 20px 40px 20px;
+#profile-info-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
-#profile-info-container{
-    display: flex;
-    gap: 20px;
-    flex-wrap:  wrap;
+.profile-info-item {
+  border: 1px solid gray;
+  padding: 25px;
 }
 
-.profile-info-item{
-    border: 1px solid gray;
-    padding: 25px;
+.profile-info-button-container {
+  display: flex;
+  gap: 20px;
+  justify-content: space-around;
 }
 
-.profile-info-button-container{
-    display: flex;
-    gap: 20px;
-    justify-content: space-around;
+.edit-add-profile-item-button {
+  padding: 5px;
+  border-radius: 10px;
+  background-color: black;
+  color: white;
 }
 
-.edit-add-profile-item-button{
-    padding: 5px;
-    border-radius: 10px;
-    background-color: black;
-    color: white;
-
+.profile-car-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-.profile-car-item{
-    border: 1px solid gray;
-    display: flex;
-    width: 33%;
+.profile-car-item {
+  padding: 10px 20px 10px 0;
+  border: 1px solid gray;
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
 }
 
-.profile-car-item img {
-    width: 50%;
-}
-
-#logout-button{
-    margin-top: 30px;
-    padding: 15px;
-    border-radius: 15px;
-    color: white;
-    font-weight: bold;
-    background-color: black;
+#logout-button {
+  margin-top: 30px;
+  padding: 15px;
+  border-radius: 15px;
+  color: white;
+  font-weight: bold;
+  background-color: black;
 }
