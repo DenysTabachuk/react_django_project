@@ -74,11 +74,55 @@ class CarView(APIView):
             return Response(serializer.data, status=201)
         print(serializer.errors)
         return Response({"errors": serializer.errors}, status=400)
+    
+    def put(self, request, pk):
+        try:
+            car = Car.objects.get(pk=pk)
+            car_images = CarImage.objects.filter(car=car)  # Фільтруємо всі зображення для цієї машини
+            for image in car_images:
+                image.image.delete()  # Видалення файлу зображення з файлової системи
+                image.delete()  # Видалення запису з бази даних
+
+        except Car.DoesNotExist:
+            return Response({"error": "Car not found"})
+
+        # Оновлення основної інформації про автомобіль
+        serializer = CarPostSerializer(car, data=request.data)
+        if serializer.is_valid():
+
+            car = serializer.save()
+
+            # Обробка нових зображень
+            images_data = []
+            for key in request.FILES:
+                if key.startswith('additional_images'):
+                    images_data.append(request.FILES[key])
+
+            # Додати нові зображення до автомобіля
+            for image in images_data:
+                CarImage.objects.create(car=car, image=image)
+        else:
+            print(serializer.errors)
+            print(serializer.error_messages)
+            return Response({"errors": serializer.errors}, status=400)
+
+        return Response(serializer.data, status=200)
+        
 
     def delete(self, request, pk=None):
         if pk is not None:
             try:
                 car = Car.objects.get(pk=pk)
+                car_images = CarImage.objects.filter(car=car)  
+                
+                for image in car_images:
+                    image.image.delete()
+                    image.delete()
+
+                if car.main_image:
+                    car.main_image.delete()
+
+
                 car.delete()
                 return Response({"message": "Car deleted successfully"}, status=204)
             except Car.DoesNotExist:
