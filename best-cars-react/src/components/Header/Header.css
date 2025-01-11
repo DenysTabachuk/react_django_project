@@ -7,6 +7,13 @@ header {
   border-bottom: 1px solid gray;
 }
 
+.menu-button {
+  display: none;
+  font-size: 2rem;
+  border: 3px solid black;
+  border-radius: 10px;
+}
+
 header ul {
   padding: 0;
   margin: 0;
@@ -43,4 +50,47 @@ header a {
 #sign-up span,
 #my-profile span {
   color: white;
+}
+
+@media (max-width: 1024px) {
+  .menu-button {
+    display: block;
+  }
+
+  .menu {
+    display: none;
+    position: absolute;
+    top: 90px;
+    right: 20px;
+  }
+
+  .opened {
+    display: block;
+  }
+
+  header ul {
+    flex-direction: column;
+    background-color: white;
+    border: 3px solid #646464;
+    border-radius: 10px;
+  }
+
+  header li {
+    font-size: 1.5rem;
+    border-bottom: 2px solid #646464;
+  }
+
+  #my-profile {
+    background-color: white;
+  }
+
+  #my-profile span {
+    color: black;
+  }
+
+  #sign-in,
+  #sign-up,
+  #my-profile {
+    border-radius: 0;
+  }
 }

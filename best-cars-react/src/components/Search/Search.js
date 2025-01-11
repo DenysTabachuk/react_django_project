@@ -29,7 +29,7 @@ export default function Search({ handleSearchChange }) {
       />
 
       <button className="search-button" onClick={handleOnSearchButtonClick}>
-        <i class="fas fa-search"></i>
+        <i className="fas fa-search"></i>
       </button>
     </div>
   );

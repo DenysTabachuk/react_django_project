@@ -10,7 +10,6 @@ export default function Select({
     handleChange(event.target.value);
   };
 
-  console.log("default value", defaultValue);
   return (
     <div className="select-container">
       <select value={selectedValue} onChange={handleSelectChange}>

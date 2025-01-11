@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import "./Header.css";
 
 import { jwtDecode } from "jwt-decode";
@@ -19,6 +20,12 @@ export default function Header() {
   let refreshToken = localStorage.getItem("refresh_token");
   const isAdmin = localStorage.getItem("is_admin") === "true";
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
   if (!isTokenValid(accessToken)) {
     refreshExpiredToken(refreshToken);
     console.log("Token refresheed");
@@ -31,7 +38,11 @@ export default function Header() {
         <Link to="/">BestCars</Link>
       </h1>
 
-      <navbar>
+      <button className="menu-button" onClick={toggleMenu}>
+        <i className={`fas ${menuOpen ? "fa-times" : "fa-bars"}`}></i>
+      </button>
+
+      <navbar className={"menu " + (menuOpen && "opened")}>
         <ul>
           <li>
             <Link to="/">Парк авто</Link>

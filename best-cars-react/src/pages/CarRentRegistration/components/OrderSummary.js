@@ -53,32 +53,33 @@ export default function OrderSummary({
   return (
     <div id="order-summary-wrapper">
       <h2>Результат</h2>
+      <div id="order-summary-container">
+        <div id="car-image-name-container">
+          <img src={carInfo.main_image_url} alt="" />
+          <h3> {carInfo.name} </h3>
+        </div>
 
-      <div id="car-image-name-container">
-        <img src={carInfo.main_image} alt="" />
-        <h3> {carInfo.name} </h3>
-      </div>
-
-      <div id="option-price-container">
-        {AditionalOptions.map((option) => (
-          <div className="option-price" key={option.id}>
-            <span>{option.name}</span>
+        <div id="option-price-container">
+          {AditionalOptions.map((option) => (
+            <div className="option-price" key={option.id}>
+              <span>{option.name}</span>
+              <span>
+                <b>{option.price}$</b>
+              </span>
+            </div>
+          ))}
+          <div className="option-price">
+            <span>Mercedes GLS x{rentDays} доба/діб</span>
             <span>
-              <b>{option.price}$</b>
+              <b>{rentDaysPrice}$</b>
             </span>
           </div>
-        ))}
-        <div className="option-price">
-          <span>Mercedes GLS x{rentDays} доба/діб</span>
-          <span>
-            <b>{rentDaysPrice}$</b>
-          </span>
-        </div>
-        <div className="option-price">
-          <h3>Всього</h3>
-          <span>
-            <b>{totalPrice}$</b>
-          </span>
+          <div className="option-price">
+            <h3>Всього</h3>
+            <span>
+              <b>{totalPrice}$</b>
+            </span>
+          </div>
         </div>
       </div>
     </div>

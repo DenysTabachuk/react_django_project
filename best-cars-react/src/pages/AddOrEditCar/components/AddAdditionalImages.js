@@ -36,11 +36,7 @@ export default function AddAdditionalImages({ carDataObj, setCarData }) {
               alt="delete image icon"
               onClick={() => handleDeleteImage(index)}
             />
-            {img instanceof File ? (
-              <img className="added-image" src={URL.createObjectURL(img)}></img>
-            ) : (
-              <img className="added-image" src={img.image}></img>
-            )}
+            <img className="added-image" src={URL.createObjectURL(img)}></img>
           </div>
         ))}
         <input

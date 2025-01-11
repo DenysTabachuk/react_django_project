@@ -18,8 +18,8 @@
 }
 
 #search-container:focus-within {
-  background-color: #afafaf; /* Світло-блакитний фон */
-  color: #000; /* Чорний текст */
+  background-color: #afafaf;
+  border: 3px das;
 }
 
 .search-button {

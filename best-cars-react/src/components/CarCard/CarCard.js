@@ -1,7 +1,6 @@
 import "./CarCard.css";
 
 export default function CarCard({ carObject, customButton }) {
-  console.log("car: ", carObject);
   return (
     <div className="car-card">
       <h2>{carObject.name}</h2>

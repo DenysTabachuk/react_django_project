@@ -13,6 +13,7 @@ import "./AddOrEditCar.css";
 const AddCarForm = () => {
   let accessToken = localStorage.getItem("access_token");
   const isAdmin = localStorage.getItem("is_admin");
+  const [isLoading, setIsLoading] = useState(false);
 
   const [brands, setBrands] = useState([]);
   const [carClasses, setCarClasses] = useState([]);
@@ -58,14 +59,11 @@ const AddCarForm = () => {
 
     console.log("Data to send:", dataToSend);
     const formData = new FormData();
-    Object.keys(dataToSend).forEach((key) => {
+    for (const key of Object.keys(dataToSend)) {
       if (key === "additional_images") {
         dataToSend.additional_images.forEach((image, index) => {
           formData.append(`additional_images[${index}]`, image);
         });
-        // dataToSend.additional_images.forEach((image) => {
-        //   formData.append("additional_images", image);
-        // });
       } else {
         const value =
           key === "additional_functions" || key === "prices"
@@ -73,27 +71,32 @@ const AddCarForm = () => {
             : dataToSend[key];
         formData.append(key, value);
       }
-    });
+    }
 
-    fetch("http://localhost:8000/cars/", {
-      method: "POST",
-      body: formData,
-      headers: {
-        Authorization: `Bearer ${accessToken}`, // Токен для аутентифікації
-      },
-    })
-      .then((response) => {
-        if (response.status === 201) {
-          navigate("/");
-          window.location.reload();
-        }
-      })
-      .then((data) => {
-        console.log("Response data: ", data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    try {
+      console.log("Id ", id);
+      debugger;
+      const result = isEditing
+        ? await axiosConfig.put(`cars/${id}/`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+        : await axiosConfig.post("cars/", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+
+      navigate("/");
+    } catch (error) {
+      if (error.response) {
+        console.log(
+          "Помилка при виконанні запиту на оновлення машини:",
+          error.message
+        );
+      }
+    }
   };
 
   useEffect(() => {
@@ -110,8 +113,46 @@ const AddCarForm = () => {
     const getCarData = async () => {
       try {
         const response = await axiosConfig.get(`cars/${id}/`);
-        setCarData(convertToCamelCase(response.data));
-        console.log("Car data", response.data);
+        const carData = convertToCamelCase(response.data);
+        console.log("Car data to edit", carData);
+
+        if (carData.mainImageUrl) {
+          //   // url To File
+          console.log(carData.mainImageUrl);
+          const imgResponse = await fetch(carData.mainImageUrl);
+          const data = await imgResponse.blob();
+          const mainImageFile = new File([data], carData.name + "main.jpeg", {
+            type: "image/jpeg",
+          });
+          delete carData.mainImageUrl;
+          carData.mainImage = mainImageFile;
+
+          const additionalImageFiles = [];
+          for (let i = 0; i < carData.additionalImages.length; i++) {
+            const imageUrl = carData.additionalImages[i].image;
+            if (imageUrl) {
+              console.log(imageUrl);
+              const imageResponse = await fetch(imageUrl);
+              const imageData = await imageResponse.blob();
+              const imageFile = new File(
+                [imageData],
+                `additional_image_${i + 1}.jpeg`,
+                {
+                  type: "image/jpeg",
+                }
+              );
+              additionalImageFiles.push(imageFile);
+            }
+          }
+
+          console.log("additionalImageFiles ", additionalImageFiles);
+          carData.additionalImages = additionalImageFiles;
+          delete carData.mainImageUrl;
+          carData.mainImage = mainImageFile;
+          setCarData(carData);
+        }
+        console.log("Car data we are editing ", carData);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching car data", error);
       }
@@ -132,6 +173,7 @@ const AddCarForm = () => {
 
     if (id) {
       setIsEditing(true);
+      setIsLoading(true);
       getCarData();
     }
   }, [id]);
@@ -140,7 +182,9 @@ const AddCarForm = () => {
     <>
       <Header></Header>
       <div id="page-content">
-        {isAdmin ? (
+        {isLoading ? (
+          <h2>Завантаження</h2>
+        ) : isAdmin ? (
           <>
             <h1 className="centered-text">Створення нового оголошення</h1>
 
@@ -231,8 +275,8 @@ const AddCarForm = () => {
                     <input
                       type="radio"
                       name="fuelType" // Fixed the name to match the state key
-                      value="patrol"
-                      checked={carData.fuelType === "patrol"}
+                      value="petrol"
+                      checked={carData.fuelType === "petrol"}
                       onChange={handleChange}
                     />{" "}
                     Бензин

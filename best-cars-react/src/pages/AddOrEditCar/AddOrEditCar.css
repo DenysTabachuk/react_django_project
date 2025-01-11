@@ -104,13 +104,17 @@ table {
 
 th,
 td {
-  border-bottom: 1px solid black;
   padding: 10px;
   text-align: left;
 }
 
 .cell-input-container {
   padding: 2px;
+}
+
+.price-row {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
 }
 
 .price-input {

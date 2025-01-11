@@ -5,6 +5,7 @@ import CarCard from "../../components/CarCard/CarCard.js";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { convertToCamelCase } from "../../utils/index.js";
+import axiosConfig from "../../api/axiosConfig.js";
 import "./CarInfo.css";
 
 export default function CarInfo() {
@@ -56,16 +57,13 @@ export default function CarInfo() {
   }, [id]);
 
   const handleDelete = () => {
-    fetch(`http://127.0.0.1:8000/cars/${id}/`, {
-      method: "DELETE",
-      headers: {
-        Accept: "application/json",
-      },
-    })
+    axiosConfig
+      .delete(`/cars/${id}/`, {
+        headers: {
+          Accept: "application/json",
+        },
+      })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
         navigate("/");
         window.location.reload();
       })
@@ -83,70 +81,84 @@ export default function CarInfo() {
   return (
     <>
       <Header></Header>
-      <div id="car-info-container">
-        <div id="column1">
-          <h1>Прокат {car.name}</h1>
-          <p className="description">{carClassMap[car.car_class]} клас</p>
+      <div id="page-content">
+        <div id="car-info-container">
+          <div id="column1">
+            <h1>Прокат {car.name}</h1>
+            <p className="description">{carClassMap[car.car_class]} клас</p>
 
-          <CutsomSlider>
-            {car.additional_images.map((item, index) => {
-              return <img key={item.id} src={item.image} alt={item.alt_text} />;
-            })}
-          </CutsomSlider>
+            <CutsomSlider>
+              {car.additional_images.map((item, index) => {
+                return (
+                  <img key={item.id} src={item.image} alt={item.alt_text} />
+                );
+              })}
+            </CutsomSlider>
 
-          <div id="main-characteristics-container">
-            <ul>
-              <li>
-                <img
-                  src="/icons/car-info/gearbox.png"
-                  className="icon"
-                  alt=""
-                />
-                <big>{gearBoxMap[car.gear_box]}</big>
-              </li>
-              <li>
-                <img src="/icons/car-info/fuel.png" className="icon" alt="" />
-                <big>
-                  {fuelTypeMap[car.fuel_type]}/{car.consumption}
-                </big>
-              </li>
-              <li>
-                <img
-                  src="/icons/car-info/car-engine.png"
-                  className="icon"
-                  alt=""
-                />
-                <big>
-                  {car.engine_volume} л {car.engine_power} к.с.
-                </big>
-              </li>
-            </ul>
-          </div>
-
-          <div id="additional-functions-wrapper">
-            <h2>Додаткові функції</h2>
-            <div id="additional-functions-container">
+            <div id="main-characteristics-container">
               <ul>
-                {car.additional_functions.map((func, index) => (
-                  <li key={index}>
-                    <img src="/icons/check-mark.png" alt="" className="icon" />
-                    <span>{func}</span>
-                  </li>
-                ))}
+                <li>
+                  <img
+                    src="/icons/car-info/gearbox.png"
+                    className="icon"
+                    alt=""
+                  />
+                  <big>{gearBoxMap[car.gear_box]}</big>
+                </li>
+                <li>
+                  <img src="/icons/car-info/fuel.png" className="icon" alt="" />
+                  <big>
+                    {fuelTypeMap[car.fuel_type]}/{car.consumption}
+                  </big>
+                </li>
+                <li>
+                  <img
+                    src="/icons/car-info/car-engine.png"
+                    className="icon"
+                    alt=""
+                  />
+                  <big>
+                    {car.engine_volume} л {car.engine_power} к.с.
+                  </big>
+                </li>
               </ul>
+            </div>
+
+            <div id="additional-functions-wrapper">
+              <h2>Додаткові функції</h2>
+              <div id="additional-functions-container">
+                {car.additional_functions.length !== 0 ? (
+                  <ul>
+                    {car.additional_functions.map((func, index) => (
+                      <li key={index}>
+                        <img
+                          src="/icons/check-mark.png"
+                          alt=""
+                          className="icon"
+                        />
+                        <span>{func}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="description">Додаткові функції не вказані</p>
+                )}
+              </div>
+            </div>
+
+            <div id="description-wrapper">
+              <h2>Опис</h2>
+              <div id="description-container">
+                <p className="description">
+                  <big>
+                    {car.description ? car.description : "Опис відсутній"}
+                  </big>
+                </p>
+              </div>
             </div>
           </div>
 
-          <div id="description-continaer">
-            <h2>Опис</h2>
-            <p>
-              <big>{car.description}</big>
-            </p>
-          </div>
-        </div>
-
-        <div id="column2" style={{ height: "100%" }}>
-          <div style={{ height: "30%", width: "70%", margin: "80px" }}>
+          <div id="column2" style={{ height: "100%" }}>
             <CarCard
               carObject={car}
               customButton={
@@ -158,24 +170,23 @@ export default function CarInfo() {
                 </button>
               }
             ></CarCard>
-          </div>
 
-          {isAdmin && (
-            <div id="ad-managment">
-              <h2 className="centered-text">Управління оголошенням</h2>
-              <div className="button-container">
-                <button id="delete-button" onClick={handleDelete}>
-                  Видалити оголошення
-                </button>
-                <button id="edit-button" onClick={handleEdit}>
-                  Редагувати оголошення
-                </button>
+            {isAdmin && (
+              <div id="ad-managment">
+                <h2 className="centered-text">Управління оголошенням</h2>
+                <div className="button-container">
+                  <button id="delete-button" onClick={handleDelete}>
+                    Видалити оголошення
+                  </button>
+                  <button id="edit-button" onClick={handleEdit}>
+                    Редагувати оголошення
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
-
       <Footer></Footer>
     </>
   );

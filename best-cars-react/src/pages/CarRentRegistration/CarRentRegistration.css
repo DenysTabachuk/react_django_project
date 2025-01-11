@@ -1,145 +1,149 @@
 #rent-registration-grid-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr; 
-    gap: 20px; 
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
 .icon {
-    height: 30px;
+  height: 30px;
 }
 
-.description{
-    color: gray;
+.description {
+  color: gray;
 }
 
-.column-space-between{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+.column-space-between {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
-
 
 /* option services */
 
-#option-services-wrapper{
-    padding: 10px;
-    width: 80%;
+#option-services-wrapper {
+  padding: 10px;
+  width: 80%;
 }
 
-.checkbox-icon-name{
-    display: flex;
-    align-items: center;
-    gap: 5px;
+.checkbox-icon-name {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
-
-.option-service{
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
+.option-service {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
 }
 
 /* payment method */
 
-#payment-method-wrapper{
-    width: 80%;
+#payment-method-wrapper {
+  width: 80%;
 }
 
-.payment-method-option{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.payment-method-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-#payment-methods-container{
-    margin-left: 20px;
+#payment-methods-container {
+  margin-left: 20px;
 }
 
-.radio-icon-name{
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.radio-icon-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 /* contanct info */
-#contact-info-wrapper{
-    display: flex;
-    flex-direction: column;
+#contact-info-wrapper {
+  display: flex;
+  flex-direction: column;
 }
 
-#contanct-info-inputs{
-    margin-left: 20px;
+#contanct-info-inputs {
+  margin-left: 20px;
 }
 
-#contact-info-wrapper input{
-    padding: 15px;
-    width: 50%;
+#contact-info-wrapper input {
+  padding: 15px;
+  width: 50%;
 }
 
-.label-input{
-    margin-bottom: 20px;
+.label-input {
+  margin-bottom: 20px;
 }
 
 /* comment */
 
-#comment-wrapper textarea{
-    width: 70%;
-    min-height: 250px;
-    margin-left: 20px;
+#comment-wrapper textarea {
+  width: 70%;
+  min-height: 250px;
+  margin-left: 20px;
 }
-
 
 /* order summary  */
-#order-summary-wrapper{
-    width: 70%;
+#order-summary-wrapper {
+  width: 70%;
 }
 
-#car-image-name-container{
-    border-top: 1px  solid gray;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+#order-summary-container {
+  padding-left: 15px;
+}
+
+#car-image-name-container {
+  border-top: 1px solid gray;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #car-image-name-container img {
-    width: 40%;
-
+  width: 40%;
 }
 
-#option-price-container{
-    padding: 20px 0 0 20px;
-    border-top: 1px  solid gray;
-    margin-top: 20px;
+#option-price-container {
+  padding: 20px 0 0 20px;
+  border-top: 1px solid gray;
+  margin-top: 20px;
 }
 
-.option-price{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: 10px;
+.option-price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
 }
 
-#rent-button-container{
-    display: flex;
-    justify-content: center;
+#rent-button-container {
+  display: flex;
+  justify-content: center;
 }
 
-#confirm-rent-button{
-    background-color: black;
-    color: white;
-    padding: 15px;
-    border-radius: 15px;
+#confirm-rent-button {
+  background-color: black;
+  color: white;
+  padding: 15px;
+  border-radius: 15px;
 }
 
-
-#date-picker input{
-    margin: 10px 0px 10px 20px;
-
-    height: 30px;
+#date-picker input {
+  margin: 10px 0px 10px 20px;
+  height: 30px;
 }
 
 /* date  */
-input[type="date"]{
-   width: 70%;
-   margin-left: 3%; 
+input[type="date"] {
+  width: 70%;
+  margin-left: 3%;
+}
+
+@media (max-width: 768px) {
+  #rent-registration-grid-container {
+    display: block;
+  }
 }

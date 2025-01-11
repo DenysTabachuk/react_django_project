@@ -1,69 +1,82 @@
-#car-info-container{
-    padding: 0 20px 40px 20px;
-    display: flex;
-    justify-content: space-between;
+#car-info-container {
+  display: flex;
+  justify-content: space-between;
 }
 
-#car-info-container #column1{
-    width: 65%;
+#car-info-container #column1 {
+  width: 65%;
 }
 
-#car-info-container #column2{
-   margin: 75px 0px 40px 20px;
-   display: flex;
-   align-items: center;
-   flex-direction: column;
+#car-info-container #column2 {
+  margin: 75px 0px 40px 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
-#main-characteristics-container{
-    padding: 20px;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
+#main-characteristics-container {
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
 }
 
-#additional-functions-container {
-    margin-left: 20px;
+#additional-functions-container,
+#description-container {
+  margin-left: 20px;
 }
 
-#car-info-container ul{
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: start;
-    gap: 20px;
-    flex-wrap: wrap;
+#car-info-container ul {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: start;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
-#car-info-container ul li{
-    display: flex;
-    align-items: center;
+#car-info-container ul li {
+  display: flex;
+  align-items: center;
 }
 
-#car-info-container ul li img{
-    padding: 5px;
+#car-info-container ul li img {
+  padding: 5px;
 }
-
 
 #description-continaer p {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
-#delete-button, #edit-button{
-    border: 2px solid black;
-    background-color: red;
-    padding: 15px;
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: 0.9rem;
-    margin-top: 20px;
+#delete-button,
+#edit-button {
+  border: 2px solid black;
+  background-color: red;
+  padding: 15px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-top: 20px;
 }
 
-#edit-button{
-    background-color: rgb(91, 189, 91);
+#edit-button {
+  background-color: rgb(91, 189, 91);
 }
 
-.button-container{
-    display: flex;
-    justify-content: space-around;
-    margin-top: 40px;
+.button-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 40px;
+}
+
+@media (max-width: 748px) {
+  #car-info-container {
+    display: block;
+  }
+  #car-info-container #column1 {
+    width: 100%;
+  }
+
+  #car-info-container .car-card {
+    width: 100%;
+  }
 }

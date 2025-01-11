@@ -2,6 +2,7 @@ import { useRef } from "react";
 import AddSmthImage from "./AddSmthImage";
 
 export default function AddMainImage({ carDataObj, setCarData }) {
+  console.log(carDataObj);
   const fileInputRef = useRef(null);
 
   const handleDeleteMainImage = () => {
@@ -19,12 +20,11 @@ export default function AddMainImage({ carDataObj, setCarData }) {
     });
   };
 
-  console.log("CarDataObj 111", carDataObj);
   return (
     <>
       <label>Основне фото авто</label>
       <div id="main-image-container">
-        {carDataObj.mainImageUrl ? (
+        {carDataObj.mainImage ? (
           <>
             <div className="added-image-container">
               <img
@@ -33,17 +33,11 @@ export default function AddMainImage({ carDataObj, setCarData }) {
                 alt=""
                 onClick={handleDeleteMainImage}
               />
-              {carDataObj.mainImageUrl instanceof File ? (
-                <img
-                  className="added-image"
-                  src={URL.createObjectURL(carDataObj.mainImageUrl)}
-                ></img>
-              ) : (
-                <img
-                  className="added-image"
-                  src={carDataObj.mainImageUrl}
-                ></img>
-              )}
+
+              <img
+                className="added-image"
+                src={URL.createObjectURL(carDataObj.mainImage)}
+              ></img>
             </div>
           </>
         ) : (

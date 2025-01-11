@@ -2,18 +2,20 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import React from "react";
 import Header from "../../components/Header/Header.js";
-import Select from "../../components/Seletect/Select.js";
+import Select from "../../components/Select/Select.js";
 import CarCard from "../../components/CarCard/CarCard.js";
 import Search from "../../components/Search/Search.js";
 import Footer from "../../components/Footer/Footer.js";
 import axiosConfig from "../../api/axiosConfig.js";
 import { convertToCamelCase } from "../../utils/index.js";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import "./Home.css";
 
 const Home = () => {
   const navigate = useNavigate();
-
+  const [showFilters, setShowFilters] = useState(window.innerWidth > 1024);
   const [cars, setCars] = useState(null);
   const [carBrands, setCarBrands] = useState(null);
 
@@ -132,20 +134,41 @@ const Home = () => {
     setSelectedFilters({ ...selectedFilters, name: value });
   };
 
+  const [text, setText] = useState("Натисни щоб побачити фільтри"); // test
+
+  const handleClickToShowFilters = () => {
+    setShowFilters(!showFilters);
+  };
+
   return (
     <>
       <Header></Header>
 
       <div id="banner">
         <h1>Best Cars</h1>
-        <p>
+        <p className="centered-text">
           <big>Оренда найкращих авто у вашому місті по доступній ціні</big>
         </p>
       </div>
 
+      <div id="click-to-show-filters" onClick={handleClickToShowFilters}>
+        <span>
+          <big>
+            {showFilters
+              ? "Натисни щоб приховати фільтри"
+              : "Натисни щоб побачити фільтри"}
+          </big>
+        </span>
+        <img
+          src="icons/down-arrow.png"
+          alt=""
+          className={`icon down-arrow${showFilters ? "-up" : ""}`}
+        />
+      </div>
+
       {carBrands !== null ? (
         <div id="page-content">
-          <div id="filters">
+          <div id="filters" style={{ display: !showFilters && "none" }}>
             <div id="select-container">
               <Select
                 values={carBrands.map((brand) => brand.name)}
