@@ -6,8 +6,9 @@ import OrderSummary from "./components/OrderSummary.js";
 import OptionServices from "./components/OptionServices.js";
 import ContactInfo from "./components/ContactInfo.js";
 import PaymentMethod from "./components/PaymentMethod.js";
+import Select from "../../components/Select/Select.js";
 import { optionalServices } from "./components/OptionServices.js"; // можливо дивно
-
+import axiosConfig from "../../api/axiosConfig.js";
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -34,6 +35,12 @@ export default function CarRentRegistration() {
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [additionalComment, setAdditionalComment] = useState("");
   const [dates, setDates] = useState({ startDate: "", endDate: "" });
+  const [locations, setLocations] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState();
+
+  const handleLocationChange = (e) => {
+    setSelectedLocation(e.target.value);
+  };
 
   const handleDateChange = (e) => {
     const { name, value } = e.target;
@@ -86,8 +93,14 @@ export default function CarRentRegistration() {
       }
     };
 
+    const getLocations = async () => {
+      const response = await axiosConfig.get("locations");
+      console.log("Locations: ", locations);
+      setLocations(response.data);
+    };
+
     const fetchData = async () => {
-      await Promise.all([getProfileData(), getCarData()]); // Чекаємо на обидва запити
+      await Promise.all([getProfileData(), getCarData(), getLocations()]); // Чекаємо на обидва запити
       setLoadingData(false);
     };
 
@@ -138,6 +151,7 @@ export default function CarRentRegistration() {
         additional_services: selectedAdditionalOptions,
         comment: additionalComment,
         payment_method: paymentMethod,
+        location: selectedLocation,
       };
 
       if (dates.startDate === "" || dates.endDate === "") {
@@ -211,6 +225,26 @@ export default function CarRentRegistration() {
                   placeholder="Напишіть ваш коментар тут..."
                   value={additionalComment}
                 ></textarea>
+              </div>
+
+              <div id="location-wrapper">
+                <h3>Локація</h3>
+                <div id="location-selection">
+                  <select
+                    value={selectedLocation}
+                    onChange={handleLocationChange}
+                  >
+                    <option value="" disabled>
+                      Виберіть локацію
+                    </option>
+
+                    {locations.map((location) => (
+                      <option value={location.id}>
+                        {location.city}, {location.address}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               <OrderSummary

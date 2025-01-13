@@ -46,7 +46,6 @@ class UserProfileView(APIView):
         user = request.user  # Отримуємо користувача з request (він автоматично розпізнається через токен)
         rentals = Rental.objects.filter(user=request.user)
         rentals_serializer = RentalGetSerializer(rentals, many=True, context={'request': request})
-        print(rentals_serializer.data[0])
         profile_data = {
             'id': user.id,
             'username': user.username,

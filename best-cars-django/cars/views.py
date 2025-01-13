@@ -32,12 +32,10 @@ class CarView(APIView):
             carClass = request.GET.get('car_class')
 
             if name:
-                print(name)
                 filters &= Q(name__icontains=name) 
             if brand:
                 filters &= Q(brand__name__exact=brand) 
             if fuelType:
-                print(fuelType)
                 filters &= Q(fuel_type__exact=fuelType)
             if gearBox:
                 filters &= Q(gear_box__exact=gearBox)
@@ -51,14 +49,12 @@ class CarView(APIView):
             try:
                 car = Car.objects.get(pk=pk)
                 serializer = CarGetSerializer(car, context={'request': request})
-                print("Car", serializer.data)
                 return Response(serializer.data, status=200)
             except Car.DoesNotExist:
                 return Response({"error": "Car not found"}, status=404)
 
     def post(self, request):
         serializer = CarPostSerializer(data=request.data)
-        print(request.data)
         if serializer.is_valid():
             car = serializer.save()  
 
@@ -72,7 +68,6 @@ class CarView(APIView):
                 CarImage.objects.create(car=car, image=image)
 
             return Response(serializer.data, status=201)
-        print(serializer.errors)
         return Response({"errors": serializer.errors}, status=400)
     
     def put(self, request, pk):
@@ -102,8 +97,6 @@ class CarView(APIView):
             for image in images_data:
                 CarImage.objects.create(car=car, image=image)
         else:
-            print(serializer.errors)
-            print(serializer.error_messages)
             return Response({"errors": serializer.errors}, status=400)
 
         return Response(serializer.data, status=200)

@@ -22,7 +22,7 @@ export default function AddMainImage({ carDataObj, setCarData }) {
 
   return (
     <>
-      <label>Основне фото авто</label>
+      <label>Основне фото авто*</label>
       <div id="main-image-container">
         {carDataObj.mainImage ? (
           <>

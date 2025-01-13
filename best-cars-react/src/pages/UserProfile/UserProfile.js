@@ -14,7 +14,6 @@ export default function UserProfile() {
     phone_number: { value: "", label: "Номер телефону", editing: false },
     username: { value: "", label: "Логін", editing: false },
   });
-
   //To avoid unnecessary requests to the server
   const [originalProfile, setOriginalProfile] = useState({
     first_name: "",
@@ -24,7 +23,8 @@ export default function UserProfile() {
     username: "",
   });
 
-  const [rentals, setRentals] = useState([]);
+  const [ongoingRentals, setOngoingRentals] = useState([]);
+  const [completedRentals, setCompletedRentals] = useState([]);
 
   const navigate = useNavigate();
 
@@ -33,6 +33,7 @@ export default function UserProfile() {
       try {
         const response = await axiosConfig.get("users/user-profile/");
         const profileData = response.data;
+        console.log("Profile data loaded successfully:", profileData);
         setProfile({
           first_name: {
             value: profileData.first_name,
@@ -57,8 +58,13 @@ export default function UserProfile() {
           },
         });
 
-        setRentals(profileData.rentals);
-        console.log("Profile data loaded successfully:", profileData);
+        const currentDate = new Date().toISOString();
+        setOngoingRentals(
+          profileData.rentals.filter((rental) => rental.end_date > currentDate)
+        );
+        setCompletedRentals(
+          profileData.rentals.filter((rental) => rental.end_date <= currentDate)
+        );
         setOriginalProfile(profileData); // Зберігаємо оригінальні значення
       } catch (error) {
         console.error("Error fetching profile data", error);
@@ -71,6 +77,7 @@ export default function UserProfile() {
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
+    localStorage.removeItem("is_admin");
     navigate("/");
   };
 
@@ -152,58 +159,60 @@ export default function UserProfile() {
             </div>
           ))}
         </div>
-
+        <br />
         <a href="">Змінити пароль</a>
 
-        <h2>Поточні аренди авто</h2>
+        <h2>Поточні оренди авто</h2>
         <div className="profile-car-list">
-          {rentals.map(
-            (rental) =>
-              rental.end_date > new Date().toISOString() && (
-                <div className="profile-car-item" key={"rental" + rental.id}>
-                  <img src={rental.car.main_image_url} />
-                  <div className="rent-info">
-                    <h2>{rental.car.name}</h2>
-                    <p className="description">
-                      {new Date(rental.start_date).toLocaleDateString("uk-UA")}-
-                      {new Date(rental.end_date).toLocaleDateString("uk-UA")}
-                    </p>
-                    <p className="description">
-                      Залишилося днів оренди:{" "}
-                      {(
-                        (new Date(rental.end_date) -
-                          new Date(rental.start_date)) /
-                        (1000 * 3600 * 24)
-                      ).toFixed(0)}
-                    </p>
-                    <p>
-                      <b>{rental.total_price}$</b>
-                    </p>
-                  </div>
+          {ongoingRentals.length !== 0 ? (
+            ongoingRentals.map((rental) => (
+              <div className="profile-car-item" key={"rental" + rental.id}>
+                <img src={rental.car.main_image_url} />
+                <div className="rent-info">
+                  <h2>{rental.car.name}</h2>
+                  <p className="description">
+                    {new Date(rental.start_date).toLocaleDateString("uk-UA")}-
+                    {new Date(rental.end_date).toLocaleDateString("uk-UA")}
+                  </p>
+                  <p className="description">
+                    Залишилося днів оренди:{" "}
+                    {(
+                      (new Date(rental.end_date) -
+                        new Date(rental.start_date)) /
+                      (1000 * 3600 * 24)
+                    ).toFixed(0)}
+                  </p>
+                  <p>
+                    <b>{rental.total_price}$</b>
+                  </p>
                 </div>
-              )
+              </div>
+            ))
+          ) : (
+            <p className="description">Немає поточних оренд</p>
           )}
         </div>
 
         <h2>Історія оренд</h2>
         <div className="profile-car-list">
-          {rentals.map(
-            (rental) =>
-              rental.end_date < new Date().toISOString() && (
-                <div className="profile-car-item" key={"rental" + rental.id}>
-                  <img src={rental.car.main_image_url} />
-                  <div className="rent-info">
-                    <h2>{rental.car.name}</h2>
-                    <p className="description">
-                      {new Date(rental.start_date).toLocaleDateString("uk-UA")}-
-                      {new Date(rental.end_date).toLocaleDateString("uk-UA")}
-                    </p>
-                    <p>
-                      <b>{rental.total_price}$</b>
-                    </p>
-                  </div>
+          {completedRentals.length !== 0 ? (
+            completedRentals.map((rental) => (
+              <div className="profile-car-item" key={"rental" + rental.id}>
+                <img src={rental.car.main_image_url} />
+                <div className="rent-info">
+                  <h2>{rental.car.name}</h2>
+                  <p className="description">
+                    {new Date(rental.start_date).toLocaleDateString("uk-UA")}-
+                    {new Date(rental.end_date).toLocaleDateString("uk-UA")}
+                  </p>
+                  <p>
+                    <b>{rental.total_price}$</b>
+                  </p>
                 </div>
-              )
+              </div>
+            ))
+          ) : (
+            <p className="description">Історія оренд відсутня</p>
           )}
         </div>
 

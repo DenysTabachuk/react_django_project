@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 
 User = get_user_model()
 
+
 class RegisterSerializer(serializers.ModelSerializer):
     phone_number = serializers.CharField(required=True)
     password = serializers.CharField(required=True, write_only=True)
@@ -38,7 +39,8 @@ class LoginSerializer(serializers.Serializer):
         if user is None:
             raise serializers.ValidationError("Invalid credentials")
         return user
-    
+
+
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

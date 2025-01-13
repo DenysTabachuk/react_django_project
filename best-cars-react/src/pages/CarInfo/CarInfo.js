@@ -34,26 +34,21 @@ export default function CarInfo() {
   };
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/cars/${id}/`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Card Data", data);
-        // setCar(convertToCamelCase(data));
-        setCar(data);
-      })
-      .catch((error) => {
+    const fetchCarData = async () => {
+      try {
+        const response = await axiosConfig.get(`cars/${id}/`, {
+          headers: {
+            Accept: "application/json",
+          },
+        });
+        console.log("Car Data", response.data);
+        setCar(response.data);
+      } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
-      });
+      }
+    };
+
+    fetchCarData();
   }, [id]);
 
   const handleDelete = () => {

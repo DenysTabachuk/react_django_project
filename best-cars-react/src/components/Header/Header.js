@@ -56,6 +56,9 @@ export default function Header() {
           <li>
             <Link to="/contact-info">Контакти</Link>
           </li>
+          <li>
+            <Link to="/locations">Де нас знайти</Link>
+          </li>
 
           {isAdmin && (
             <li>

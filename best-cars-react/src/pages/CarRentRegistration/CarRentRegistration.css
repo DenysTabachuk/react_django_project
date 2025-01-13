@@ -142,6 +142,15 @@ input[type="date"] {
   margin-left: 3%;
 }
 
+#location-selection {
+  padding-left: 15px;
+}
+
+select {
+  width: 70%;
+  padding: 15px;
+}
+
 @media (max-width: 768px) {
   #rent-registration-grid-container {
     display: block;

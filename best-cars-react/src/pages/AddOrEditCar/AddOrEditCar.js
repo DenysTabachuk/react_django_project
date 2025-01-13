@@ -11,8 +11,9 @@ import axiosConfig from "../../api/axiosConfig.js";
 import "./AddOrEditCar.css";
 
 const AddCarForm = () => {
-  let accessToken = localStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   const isAdmin = localStorage.getItem("is_admin");
+
   const [isLoading, setIsLoading] = useState(false);
 
   const [brands, setBrands] = useState([]);
@@ -41,6 +42,14 @@ const AddCarForm = () => {
     ],
   });
 
+  const [errorsTexts, setErrorsTexts] = useState({
+    brandError: "",
+    classError: "",
+    gearBoxError: "",
+    fuelTypeError: "",
+    globalError: "",
+  });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCarData({
@@ -51,7 +60,46 @@ const AddCarForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let formIsCorrect = true;
+    let newErrorsTexts = { ...errorsTexts };
+    if (!carData.brand) {
+      newErrorsTexts.brandError = "Обов'язково оберіть марку авто";
+      formIsCorrect = false;
+    } else {
+      newErrorsTexts.brandError = "";
+    }
+
+    if (!carData.class) {
+      newErrorsTexts.classError = "Обов'язково оберіть клас авто";
+      formIsCorrect = false;
+    } else {
+      newErrorsTexts.classError = "";
+    }
+
+    if (!carData.gearBox) {
+      newErrorsTexts.gearBoxError = "Обов'язково оберіть тип коробки передач";
+      formIsCorrect = false;
+    } else {
+      newErrorsTexts.gearBoxError = "";
+    }
+
+    if (!carData.fuelType) {
+      newErrorsTexts.fuelTypeError = "Обов'язково оберіть тип пального";
+      formIsCorrect = false;
+    } else {
+      newErrorsTexts.fuelTypeError = "";
+    }
+
+    setErrorsTexts(newErrorsTexts);
+    if (!formIsCorrect) {
+      newErrorsTexts.globalError = "Заповніть всі поля";
+      setErrorsTexts(newErrorsTexts);
+      return;
+    }
+
     const dataToSend = convertToSnakeCase(carData);
+
     dataToSend.prices = dataToSend.prices.map((price) => ({
       range: price.range,
       price: price.price,
@@ -193,18 +241,19 @@ const AddCarForm = () => {
                 <div id="column1">
                   {/* car name */}
                   <div className="input-container">
-                    <label>Назва машини </label>
+                    <label>Назва машини*</label>
                     <br />
                     <input
                       type="text"
                       name="name"
                       value={carData.name}
                       onChange={handleChange}
+                      required
                     />
                   </div>
 
                   <div className="input-container">
-                    <label>Марка </label>
+                    <label>Марка*</label>
                     <br />
 
                     <select
@@ -212,15 +261,23 @@ const AddCarForm = () => {
                       value={carData.brand}
                       onChange={handleChange}
                     >
-                      <option value="">Оберіть марку авто</option>
+                      <option value="" disabled>
+                        Оберіть марку авто
+                      </option>
                       {brands.map((brand) => (
                         <option value={brand.id}>{brand.name}</option>
                       ))}
                     </select>
+
+                    {errorsTexts.brandError && (
+                      <p className="error-text">
+                        <small>{errorsTexts.brandError}</small>
+                      </p>
+                    )}
                   </div>
 
                   <div className="input-container">
-                    <label>Клас авто </label>
+                    <label>Клас авто*</label>
                     <br />
 
                     <select
@@ -236,15 +293,21 @@ const AddCarForm = () => {
                         </option>
                       ))}
                     </select>
+
+                    {errorsTexts.classError && (
+                      <p className="error-text">
+                        <small>{errorsTexts.classError}</small>
+                      </p>
+                    )}
                   </div>
 
                   {/* Gear Box Radio Buttons */}
                   <div className="input-container">
-                    <label>Коробка передач</label>
+                    <label>Коробка передач*</label>
                     <br />
                     <input
                       type="radio"
-                      name="gearBox" // Changed to match carData key
+                      name="gearBox"
                       value="manual"
                       checked={carData.gearBox === "manual"}
                       onChange={handleChange}
@@ -252,7 +315,7 @@ const AddCarForm = () => {
                     Механічна
                     <input
                       type="radio"
-                      name="gearBox" // Changed to match carData key
+                      name="gearBox"
                       value="automatic"
                       checked={carData.gearBox === "automatic"}
                       onChange={handleChange}
@@ -260,7 +323,7 @@ const AddCarForm = () => {
                     Автомат
                     <input
                       type="radio"
-                      name="gearBox" // Changed to match carData key
+                      name="gearBox"
                       value="semi-automatic"
                       checked={carData.gearBox === "semi-automatic"}
                       onChange={handleChange}
@@ -270,11 +333,11 @@ const AddCarForm = () => {
 
                   {/* Fuel Type Radio Buttons */}
                   <div className="input-container">
-                    <label>Тип пального</label>
+                    <label>Тип пального*</label>
                     <br />
                     <input
                       type="radio"
-                      name="fuelType" // Fixed the name to match the state key
+                      name="fuelType"
                       value="petrol"
                       checked={carData.fuelType === "petrol"}
                       onChange={handleChange}
@@ -282,7 +345,7 @@ const AddCarForm = () => {
                     Бензин
                     <input
                       type="radio"
-                      name="fuelType" // Fixed the name to match the state key
+                      name="fuelType"
                       value="diesel"
                       checked={carData.fuelType === "diesel"}
                       onChange={handleChange}
@@ -290,17 +353,25 @@ const AddCarForm = () => {
                     Дизель
                     <input
                       type="radio"
-                      name="fuelType" // Fixed the name to match the state key
+                      name="fuelType"
                       value="electricity"
                       checked={carData.fuelType === "electricity"}
                       onChange={handleChange}
                     />{" "}
                     Електроенергія
+                    <input
+                      type="radio"
+                      name="fuelType"
+                      value="hybrid"
+                      checked={carData.fuelType === "hybrid"}
+                      onChange={handleChange}
+                    />{" "}
+                    Гібрид
                   </div>
 
                   {/* Consumption */}
                   <div className="input-container">
-                    <label>Розхід</label>
+                    <label>Розхід*</label>
                     <br />
                     <input
                       type="number"
@@ -308,12 +379,14 @@ const AddCarForm = () => {
                       name="consumption"
                       value={carData.consumption}
                       onChange={handleChange}
+                      required
+                      min="0.1"
                     />
                   </div>
 
                   {/* Engine Volume */}
                   <div className="input-container">
-                    <label>Об'м двигуна</label>
+                    <label>Об'м двигуна*</label>
                     <br />
                     <input
                       type="number"
@@ -321,18 +394,23 @@ const AddCarForm = () => {
                       name="engineVolume"
                       value={carData.engineVolume}
                       onChange={handleChange}
+                      required
+                      min="0.1"
                     />
                   </div>
 
                   {/* Engine Power  */}
                   <div className="input-container">
-                    <label>Потужність двигуна</label>
+                    <label>Потужність двигуна*</label>
                     <br />
                     <input
                       type="number"
                       name="enginePower"
+                      step="0.1"
                       value={carData.enginePower}
                       onChange={handleChange}
+                      required
+                      min="0.1"
                     />
                   </div>
 
@@ -368,6 +446,14 @@ const AddCarForm = () => {
                 </div>
               </div>
 
+              <div id="global-error-container">
+                {errorsTexts.classError && (
+                  <p className="error-text centered-text">
+                    <big>{errorsTexts.globalError}</big>
+                  </p>
+                )}
+                <br />
+              </div>
               <div id="add-car-button-container">
                 <button id="add-edit-car-button" type="submit">
                   {isEditing ? "Редагувати оголошення" : "Додати оголошення"}
