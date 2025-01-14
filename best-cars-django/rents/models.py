@@ -14,6 +14,12 @@ class Rental(models.Model):
         ('cash', 'Готівка'),
     ]
 
+    APPROVAL_STATUS = [
+        ('pending', 'Очікує'),
+        ('approved', 'Прийнято'),
+        ('rejected', 'Відхилено'),
+    ]
+    
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='rentals')
     car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='rentals')  
     start_date = models.DateTimeField()  
@@ -24,8 +30,11 @@ class Rental(models.Model):
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS, default='cash')
     location = models.ForeignKey('Location', on_delete=models.CASCADE, related_name='rentals', null=True, blank=True)
     is_paid = models.BooleanField(default=False)
-
-
+    approval_status = models.CharField(
+        max_length=10,
+        choices=APPROVAL_STATUS,
+        default='pending',
+    )
 
 
     def calculate_total_price(self):
@@ -33,11 +42,10 @@ class Rental(models.Model):
         rental_duration = (self.end_date - self.start_date).days
         rental_price = 0
 
-        print( type(self.car.prices[0]))
         if (rental_duration < 1):
             raise ValueError("Rental duration must be at least 1 day.")
         elif (rental_duration > 1 < 4):
-            rental_price+= int(self.car.prices[0]['price']) * rental_duration # треба виправити, що ціна як string отримується
+            rental_price+= int(self.car.prices[0]['price']) * rental_duration
         elif (rental_duration >= 4 < 10):
             rental_price+= int(self.car.prices[1]['price']) * rental_duration
         elif (rental_duration >= 10 < 26):
@@ -45,18 +53,14 @@ class Rental(models.Model):
         else:
             rental_price+= int(self.car.prices[3]['price']) * rental_duration
              
-
         services_price = 0
         for service in self.additional_services:
-            print(type(service))
-            print(service['price'])
             services_price+= int(service['price'])
 
         return rental_price + services_price
 
     def save(self, *args, **kwargs):
         self.total_price = self.calculate_total_price()
-        print("saving total price")
         super().save(*args, **kwargs)
 
     def __str__(self):

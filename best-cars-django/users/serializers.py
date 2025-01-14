@@ -1,41 +1,56 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
+from .models import *
 
 User = get_user_model()
 
 
+class VerifyEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    code = serializers.CharField(max_length=4)
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+        user = CustomUser.objects.get(email = email)
+        code = attrs.get('code')
+        try:
+            email_verification = EmailVerificationCode.objects.get(user=user, code=code)
+        except EmailVerificationCode.DoesNotExist:
+            raise serializers.ValidationError('Невірний email або код.')
+
+        attrs['user'] = user
+        return attrs
+
+
 class RegisterSerializer(serializers.ModelSerializer):
-    phone_number = serializers.CharField(required=True)
-    password = serializers.CharField(required=True, write_only=True)
-   
     class Meta:
         model = User
-        fields = [ 'phone_number', 'password']
+        fields = [ 'email', 'password']
 
-    def validate_phone_number(self, value):
-        if User.objects.filter(phone_number=value).exists():
-            raise serializers.ValidationError('Користувач з таким номером телефона вже зареєстрований.')
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Цей email вже використовується або він не існує.")
         return value
 
+
     def create(self, validated_data):      
-        username   = "user" + validated_data['phone_number']
+        username   =  validated_data['email']
 
         user = User.objects.create_user(
             username=username,
-            email=validated_data.get('email', None),
-            phone_number=validated_data['phone_number'],
+            email=validated_data.get('email'),
             password=validated_data['password']
         )
         return user
 
 
 class LoginSerializer(serializers.Serializer):
-    phone_number = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True)
     password = serializers.CharField(required=True, write_only=True)
 
     def validate(self, data):
-        user = authenticate(phone_number=data['phone_number'], password=data['password'])
+        user = authenticate(email=data['email'], password=data['password'])
         if user is None:
             raise serializers.ValidationError("Invalid credentials")
         return user
@@ -44,11 +59,10 @@ class LoginSerializer(serializers.Serializer):
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username','email', 'phone_number', 'first_name', 'last_name']
-        extra_kwargs = {
-            'username' : {'required' : True},
-            'email': {'required': False},
-            'phone_number': {'required': False},
-            'first_name': {'required': False},
-            'last_name': {'required': False},
-        }
+        fields = ['email', 'first_name', 'last_name', 'password']
+
+       
+class UserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'first_name', 'last_name']  # Вкажіть потрібні поля

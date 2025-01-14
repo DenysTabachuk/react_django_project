@@ -13,6 +13,7 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view()),
     path('token/refresh/', TokenRefreshView.as_view()),
     path('rentals/', RentalView.as_view()),
+    path('rentals/<int:rental_id>/', RentalView.as_view()),
     path('locations/', LocationsView.as_view())
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

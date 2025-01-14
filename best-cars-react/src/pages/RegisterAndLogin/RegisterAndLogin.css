@@ -24,11 +24,13 @@
 
 .register-login-container input[type="text"],
 .register-login-container input[type="number"],
-.register-login-container input[type="password"] {
+.register-login-container input[type="password"],
+.register-login-container input[type="email"] {
   padding: 8px;
   width: 90%;
   border: 1px solid gray;
   border-radius: 5px;
+  font-size: 16px;
 }
 
 .input-container {
@@ -68,4 +70,14 @@
   .register-login-container {
     width: 80%;
   }
+}
+
+#verifiaction-code-input-container {
+  margin: 60px auto 20px auto;
+  width: 46%;
+}
+
+#verifiaction-code-input-container input {
+  margin: 0;
+  width: 97%;
 }

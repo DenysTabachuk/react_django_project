@@ -131,15 +131,15 @@ REST_FRAMEWORK = {
 }
 
 AUTHENTICATION_BACKENDS = (
-    'users.backends.PhoneNumberBackend',  # Вкажіть шлях до вашого класу PhoneNumberBackend
+    'users.backends.EmailBackend',  # Вкажіть шлях до вашого класу PhoneNumberBackend
     'django.contrib.auth.backends.ModelBackend',  # Стандартний бекенд для аутентифікації через username/email
 )
 
 AUTH_USER_MODEL = "users.CustomUser"
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=20),  # Термін дії access token (5 хвилин)
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),    # Термін дії refresh token (1 день)
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,                  # Не буде змінювати refresh token після кожного використання
     'BLACKLIST_AFTER_ROTATION': False,               # Не буде додавати refresh token до чорного списку після оновлення
 }
@@ -151,3 +151,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CORS_ALLOW_ALL_ORIGINS = True  
 
+# Email backend
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# SMTP сервер
+EMAIL_HOST = 'smtp.gmail.com'  # Для Gmail
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True  # Або EMAIL_USE_SSL, якщо використовуєте SSL
+EMAIL_HOST_USER = 'bestcars753@gmail.com'  # Ваша email-адреса
+EMAIL_HOST_PASSWORD = 'tqil pwbh jfsq bdkz'  # Пароль або App Password

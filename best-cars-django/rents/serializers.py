@@ -1,6 +1,8 @@
 from rest_framework import serializers
-from .models import Rental
+from .models import Rental, Location
 from cars.serializers import CarGetSerializer
+from users.serializers import UserDetailSerializer
+
 
 class RentalCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,19 +27,21 @@ class RentalCreateSerializer(serializers.ModelSerializer):
         if value not in ['card', 'cash']:
             raise serializers.ValidationError("Неправильний спосіб оплати.")
         return value
-    
+
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = '__all__'
+
+
 class RentalGetSerializer(serializers.ModelSerializer):
     car = CarGetSerializer()
+    user = UserDetailSerializer()
+    location = LocationSerializer()
 
     class Meta:
         model = Rental
         fields = '__all__'  # Включаємо всі поля
 
 
-from rest_framework import serializers
-from .models import Location
-
-class LocationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Location
-        fields = '__all__'

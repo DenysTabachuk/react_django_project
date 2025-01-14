@@ -49,3 +49,21 @@ textarea {
   transform: rotate(180deg);
   transition: transform 0.5s ease;
 }
+
+.default-button {
+  width: 100%;
+  padding: 15px;
+  border-radius: 15px;
+  margin-top: 20px;
+  font-weight: bold;
+  color: white;
+  background-color: black;
+}
+
+.bg-green {
+  background-color: green !important;
+}
+
+.bg-red {
+  background-color: red !important;
+}

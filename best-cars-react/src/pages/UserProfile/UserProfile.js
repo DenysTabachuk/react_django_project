@@ -11,18 +11,15 @@ export default function UserProfile() {
     first_name: { value: "", label: "Ім'я", editing: false },
     last_name: { value: "", label: "Фамілія", editing: false },
     email: { value: "", label: "Email", editing: false },
-    phone_number: { value: "", label: "Номер телефону", editing: false },
     username: { value: "", label: "Логін", editing: false },
   });
-  //To avoid unnecessary requests to the server
-  const [originalProfile, setOriginalProfile] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone_number: "",
-    username: "",
-  });
 
+  const [passwords, setPasswords] = useState({
+    old_password: "",
+    new_password: "",
+    confirm_new_password: "",
+  });
+  const [changingPassword, setChangingPassword] = useState(false);
   const [ongoingRentals, setOngoingRentals] = useState([]);
   const [completedRentals, setCompletedRentals] = useState([]);
 
@@ -51,11 +48,6 @@ export default function UserProfile() {
             label: "Номер телефону",
             editing: false,
           },
-          username: {
-            value: profileData.username,
-            label: "Логін",
-            editing: false,
-          },
         });
 
         const currentDate = new Date().toISOString();
@@ -65,7 +57,6 @@ export default function UserProfile() {
         setCompletedRentals(
           profileData.rentals.filter((rental) => rental.end_date <= currentDate)
         );
-        setOriginalProfile(profileData); // Зберігаємо оригінальні значення
       } catch (error) {
         console.error("Error fetching profile data", error);
       }
@@ -83,27 +74,19 @@ export default function UserProfile() {
 
   const handleEdit = async (key) => {
     let profileCopy = { ...profile };
-    //toggle editing mode
     profileCopy[key].editing = !profileCopy[key].editing;
     setProfile(profileCopy);
-    // if we stoped editing and we really changed field
-    if (
-      !profileCopy[key].editing &&
-      originalProfile[key] != profileCopy[key].value
-    ) {
-      try {
-        const response = await axiosConfig.patch("users/user-profile/", {
-          username: profile.username.value,
-          email: profile.email.value,
-          phone_number: profile.phone_number.value,
-          first_name: profile.first_name.value,
-          last_name: profile.last_name.value,
-        });
 
-        console.log("Profile updated successfully:", response.data);
-      } catch (error) {
-        console.error("Error updating profile data", error);
-      }
+    try {
+      const response = await axiosConfig.patch("users/user-profile/", {
+        email: profile.email.value,
+        first_name: profile.first_name.value,
+        last_name: profile.last_name.value,
+      });
+
+      console.log("Profile updated successfully:", response.data);
+    } catch (error) {
+      console.error("Error updating profile data", error);
     }
   };
 
@@ -123,14 +106,33 @@ export default function UserProfile() {
     }
   };
 
+  const handlePasswordChange = (e) => {
+    setPasswords({ ...passwords, [e.target.name]: e.target.value });
+  };
+
+  const handleChangingPassword = () => {
+    setChangingPassword(!changingPassword);
+  };
+
+  const handleSubmitPasswordChange = async () => {
+    try {
+      const response = await axiosConfig.patch("users/user-profile/", {
+        old_password: passwords.old_password,
+        new_password: passwords.new_password,
+      });
+
+      console.log("Profile updated successfully:", response.data);
+    } catch (error) {
+      console.error("Error updating profile data", error);
+    }
+  };
+
   return (
     <>
       <Header />
 
       <div id="page-content">
-        <h1>
-          Профіль користувача: {profile.username.value || "Завантаження..."}
-        </h1>
+        <h1>Профіль користувача: {profile.email.value || "Завантаження..."}</h1>
 
         <div id="profile-info-container">
           {Object.entries(profile).map(([key, { value, label, editing }]) => (
@@ -158,10 +160,79 @@ export default function UserProfile() {
               </div>
             </div>
           ))}
-        </div>
-        <br />
-        <a href="">Змінити пароль</a>
 
+          <>
+            <div id="change-password-container">
+              <div
+                id="click-to-show-passwords"
+                onClick={handleChangingPassword}
+              >
+                <span>
+                  <small>
+                    {changingPassword
+                      ? "Натисни щоб приховати зміну пароля"
+                      : "Натисни щоб змінити пароль"}
+                  </small>
+                </span>
+                <img
+                  src="icons/down-arrow.png"
+                  alt=""
+                  className={`icon down-arrow${changingPassword ? "-up" : ""}`}
+                />
+              </div>
+              {changingPassword && (
+                <div id="password-input-containers">
+                  <div className="input-container">
+                    <label>Cтарий Пароль:</label>
+                    <br />
+                    <input
+                      // type={showPassword ? "text" : "password"}
+                      type="text"
+                      name="old_password"
+                      value={passwords.old_password}
+                      onChange={handlePasswordChange}
+                    />
+                  </div>
+
+                  <div className="input-container">
+                    <label>Новий Пароль:</label>
+                    <br />
+                    <input
+                      // type={showPassword ? "text" : "password"}
+                      type="text"
+                      name="new_password"
+                      value={passwords.new_password}
+                      onChange={handlePasswordChange}
+                    />
+                  </div>
+
+                  <div className="input-container">
+                    <label>Повторити пароль:</label>
+                    <br />
+                    <input
+                      // type={showPassword ? "text" : "password"}
+                      type="text"
+                      name="confirm_password"
+                      value={passwords.confirm_password}
+                      onChange={handlePasswordChange}
+                    />
+                    {/* <span className="error-text">
+                    {passwordErrorMessage !== "" && passwordErrorMessage}
+                  </span> */}
+
+                    <button
+                      className="default-button"
+                      onClick={handleSubmitPasswordChange}
+                    >
+                      Змінити пароль
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
+        </div>
+        <h1 className="centered-text">Оренди авто</h1>
         <h2>Поточні оренди авто</h2>
         <div className="profile-car-list">
           {ongoingRentals.length !== 0 ? (

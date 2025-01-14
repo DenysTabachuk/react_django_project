@@ -1,0 +1,17 @@
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#rentals-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#select-rental-status {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  width: 25%;
+}

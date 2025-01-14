@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import "./RegisterAndLogin.css";
 import Header from "../../components/Header/Header.js";
 import Footer from "../../components/Footer/Footer.js";
-import axios from "axios";
+import axiosConfig from "../../api/axiosConfig.js";
+
 import { useNavigate, Link } from "react-router-dom";
 import {
   validatePassword,
@@ -14,13 +15,15 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
-    phone_number: "",
+    email: "",
     password: "",
     confirm_password: "",
   });
 
+  const [emailConfirmation, setEmailConfiramtion] = useState(false);
+
   const [message, setMessage] = useState("");
-  const [phoneErrorMessage, setPhoneErrorMessage] = useState("");
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
   const handleChange = (e) => {
@@ -34,14 +37,9 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setPhoneErrorMessage("");
+    setEmailErrorMessage("");
     setPasswordErrorMessage("");
 
-    //phone number validation
-    if (!validatePhoneNumber(formData.phone_number)) {
-      setPhoneErrorMessage("Невірний формат номера телефону");
-      return;
-    }
     // password validation
     if (!validatePassword(formData.password)) {
       setPasswordErrorMessage(
@@ -56,98 +54,138 @@ export default function Register() {
     //
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/users/register/",
-        formData
-      );
+      const response = await axiosConfig.post("users/register/", formData);
       setMessage(response.data.message);
-      navigate("/");
-    } catch (error) {
-      console.log(error.response.data);
-      console.log(JSON.stringify(error.response.data));
-      if (error.response.data["phone_number"]) {
-        setPhoneErrorMessage(error.response.data["phone_number"][0]);
-      } else {
-        setMessage("Error: " + JSON.stringify(error.response.data));
+      if (response.status === 201) {
+        setEmailConfiramtion(true);
       }
+    } catch (error) {
+      setEmailErrorMessage(error.response.data.email[0]);
+    }
+  };
+
+  const handleConfirmEmail = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axiosConfig.put("users/register/", {
+        email: formData.email,
+        code: formData.verification_code,
+      });
+      navigate("/login");
+    } catch (error) {
+      setMessage("Error: " + JSON.stringify(error.response.data));
     }
   };
 
   return (
     <>
       <Header></Header>
-      <div className="register-login-container">
-        <h2 className="centered-text">Реєстрація</h2>
-        {/* onSubmit={handleSubmit} */}
-        <form>
-          <div className="input-container">
-            <label>Номер телефону:</label>
+      {emailConfirmation ? (
+        <div id="page-content">
+          <h1 className="centered-text">Підтвердіть що це ваш email</h1>
+          <p className="centered-text">
+            На ваш email було надіслано 4-значний код, введіть його нижче, щоб
+            підвердити електронну адресу
+          </p>
+
+          <div id="verifiaction-code-input-container">
+            <label>Код підтвердження:</label>
             <br />
+
             <input
               type="text"
-              name="phone_number"
-              value={formData.phone_number}
+              name="verification_code"
+              value={formData.verification_code}
               onChange={handleChange}
+              maxLength="4" // Обмеження на 4 символи
+              pattern="\d{4}" // Перевірка, щоб це були лише цифри
+              title="Код має складатися з 4 цифр"
             />
-            <span className="error-text">
-              {phoneErrorMessage !== "" && phoneErrorMessage}
-            </span>
-          </div>
-          <div className="input-container">
-            <label>Пароль:</label>
-            <br />
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-          </div>
+            {/* <span className="error-text">
+              {codeErrorMessage !== "" && codeErrorMessage}
+            </span> */}
 
-          <div className="input-container">
-            <label>Повторити пароль:</label>
-            <br />
-            <input
-              type={showPassword ? "text" : "password"}
-              name="confirm_password"
-              value={formData.confirm_password}
-              onChange={handleChange}
-            />
-            <span className="error-text">
-              {passwordErrorMessage !== "" && passwordErrorMessage}
-            </span>
-          </div>
-
-          <div className="input-container">
-            <input
-              type="checkbox"
-              checked={showPassword}
-              onChange={handleCheckboxChange}
-            />
-            <span>Показати пароль</span>
-          </div>
-
-          <div>
-            <br />
-            <Link to="/login">
-              <span className="link-text">Вже зареєстровані ?</span>
-            </Link>
-          </div>
-
-          <div className="checkbox-container">
-            <input type="checkbox" />
-            <span>Надсилати мені цікаві пропозиції</span>
-          </div>
-
-          <div className="register-login-button-container">
-            <button type="submit" onClick={handleSubmit}>
-              Зареєструватися
+            <button className="default-button" onClick={handleConfirmEmail}>
+              Підтвердити
             </button>
           </div>
-        </form>
+        </div>
+      ) : (
+        <div className="register-login-container">
+          <h2 className="centered-text">Реєстрація</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="input-container">
+              <label>Email:</label>
+              <br />
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+              <br />
+              <span className="error-text">
+                {emailErrorMessage !== "" && emailErrorMessage}
+              </span>
+            </div>
 
-        <span className="error-text">{message && <p>{message}</p>}</span>
-      </div>
+            <div className="input-container">
+              <label>Пароль:</label>
+              <br />
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="input-container">
+              <label>Повторити пароль:</label>
+              <br />
+              <input
+                type={showPassword ? "text" : "password"}
+                name="confirm_password"
+                value={formData.confirm_password}
+                onChange={handleChange}
+                required
+              />
+              <span className="error-text">
+                {passwordErrorMessage !== "" && passwordErrorMessage}
+              </span>
+            </div>
+
+            <div className="input-container">
+              <input
+                type="checkbox"
+                checked={showPassword}
+                onChange={handleCheckboxChange}
+              />
+              <span>Показати пароль</span>
+            </div>
+
+            <div>
+              <br />
+              <Link to="/login">
+                <span className="link-text">Вже зареєстровані ?</span>
+              </Link>
+            </div>
+
+            <div className="checkbox-container">
+              <input type="checkbox" />
+              <span>Надсилати мені цікаві пропозиції</span>
+            </div>
+
+            <div className="register-login-button-container">
+              <button type="submit">Зареєструватися</button>
+            </div>
+          </form>
+
+          <span className="error-text">{message && <p>{message}</p>}</span>
+        </div>
+      )}
 
       <Footer></Footer>
     </>

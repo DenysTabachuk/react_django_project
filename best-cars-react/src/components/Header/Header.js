@@ -61,9 +61,14 @@ export default function Header() {
           </li>
 
           {isAdmin && (
-            <li>
-              <Link to="/add-car">Створити нове оголошення</Link>
-            </li>
+            <>
+              <li>
+                <Link to="/add-car">Створити нове оголошення</Link>
+              </li>
+              <li>
+                <Link to="/rentals">Оренди</Link>
+              </li>
+            </>
           )}
 
           {isTokenValid(accessToken) ? (

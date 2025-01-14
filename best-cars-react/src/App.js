@@ -9,6 +9,7 @@ import ContactInformation from "./pages/ContactInformation/ContactInformtaion.js
 import TermsOfRent from "./pages/TermsOfRent/TermsOfRent.js";
 import AboutCompany from "./pages/AboutCompany/AboutCompany.js";
 import Locations from "./pages/Locations/Locations.js";
+import Rentals from "./pages/Rentals/Rentals.js";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/terms-of-rent" element={<TermsOfRent />} />
         <Route path="/about-company" element={<AboutCompany />} />
         <Route path="/locations" element={<Locations></Locations>}></Route>
+        <Route path="/rentals" element={<Rentals />}></Route>
       </Routes>
     </Router>
   );
