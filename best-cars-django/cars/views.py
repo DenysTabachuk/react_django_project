@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Car, CarImage, Brand
-from .serializers import CarGetSerializer, CarPostSerializer, BrandSerializer
+from .models import *
+from .serializers import *
 from rest_framework.permissions import AllowAny, IsAdminUser
 from django.db.models import Q
 
@@ -54,6 +54,7 @@ class CarView(APIView):
                 return Response({"error": "Car not found"}, status=404)
 
     def post(self, request):
+        print(request.data)
         serializer = CarPostSerializer(data=request.data)
         if serializer.is_valid():
             car = serializer.save()  
@@ -68,6 +69,8 @@ class CarView(APIView):
                 CarImage.objects.create(car=car, image=image)
 
             return Response(serializer.data, status=201)
+        
+        print(serializer.errors)
         return Response({"errors": serializer.errors}, status=400)
     
     def put(self, request, pk):
@@ -127,3 +130,11 @@ class CarClassList(APIView):
     def get(self, request):
         car_classes = Car.CAR_CLASS  
         return Response(car_classes)
+
+class LocationsView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        locations = Location.objects.all()  
+        serializer = LocationSerializer(locations, many=True) 
+        return Response(serializer.data) 

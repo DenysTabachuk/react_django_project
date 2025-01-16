@@ -23,7 +23,7 @@ export default function CarCard({ carObject, customButton }) {
         {carObject.prices.map((timePrice) => (
           <div className="time-price" key={timePrice.range + carObject.name}>
             <span>
-              <big>{timePrice.range} діб</big>
+              <big>{timePrice.range} дн.</big>
             </span>
             <span>
               <big>

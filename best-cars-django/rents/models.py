@@ -1,11 +1,7 @@
 from django.conf import settings
 from django.db import models
-
-# Create your models here.
-from django.db import models
-from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
 from cars.models import Car
-from datetime import timedelta
 
 
 class Rental(models.Model):
@@ -28,13 +24,24 @@ class Rental(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2,  default=0 )  # Це поле не можна буде редагувати вручну, загальна ціна оренди обчислюється автоматично
     comment = models.TextField( blank=True,  null=True, help_text="Додаткові коментарі або побажання від користувача")
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS, default='cash')
-    location = models.ForeignKey('Location', on_delete=models.CASCADE, related_name='rentals', null=True, blank=True)
     is_paid = models.BooleanField(default=False)
     approval_status = models.CharField(
         max_length=10,
         choices=APPROVAL_STATUS,
         default='pending',
     )
+    phone_number = models.CharField(
+        max_length=15,  # Включає код країни і номер
+        validators=[
+            RegexValidator(
+                regex=r'^\+380\d{9}$',
+                message="Номер телефону має бути у форматі +380123456789",
+            )
+        ],
+        blank=True,  # Поле обов’язкове
+        null=True,
+        default="+380")
+
 
 
     def calculate_total_price(self):
@@ -66,13 +73,3 @@ class Rental(models.Model):
     def __str__(self):
         return f"Rental: {self.car.name} by {self.user.username} from {self.start_date} to {self.end_date}"
 
-
-class Location(models.Model):
-    city = models.CharField(max_length=100)
-    address = models.CharField(max_length=255)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.city} - {self.address}"

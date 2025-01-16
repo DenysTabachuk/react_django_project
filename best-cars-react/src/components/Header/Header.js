@@ -63,7 +63,7 @@ export default function Header() {
           {isAdmin && (
             <>
               <li>
-                <Link to="/add-car">Створити нове оголошення</Link>
+                <Link to="/add-car">Додати нове авто</Link>
               </li>
               <li>
                 <Link to="/rentals">Оренди</Link>

@@ -15,7 +15,8 @@ const AddCarForm = () => {
   const isAdmin = localStorage.getItem("is_admin");
 
   const [isLoading, setIsLoading] = useState(false);
-
+  const [locations, setLocations] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState(1);
   const [brands, setBrands] = useState([]);
   const [carClasses, setCarClasses] = useState([]);
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const AddCarForm = () => {
   const [carData, setCarData] = useState({
     name: "",
     brand: "",
-    class: "",
+    carClass: "",
     gearBox: "",
     fuelType: "",
     consumption: "",
@@ -34,6 +35,7 @@ const AddCarForm = () => {
     additionalImages: [],
     additionalFunctions: [],
     description: "",
+    location: 1,
     prices: [
       { range: "1-3", price: 0, editing: false },
       { range: "4-9", price: 0, editing: false },
@@ -42,7 +44,10 @@ const AddCarForm = () => {
     ],
   });
 
+  console.log(carData);
+
   const [errorsTexts, setErrorsTexts] = useState({
+    nameError: "",
     brandError: "",
     classError: "",
     gearBoxError: "",
@@ -61,42 +66,67 @@ const AddCarForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const fieldValidations = {
+      name: {
+        condition: !carData.name,
+        errorMessage: "Обов'зково введіть назву авто",
+      },
+      brand: {
+        condition: !carData.brand,
+        errorMessage: "Обов'язково оберіть марку авто",
+      },
+      carClass: {
+        condition: !carData.carClass,
+        errorMessage: "Обов'язково оберіть клас авто",
+      },
+      gearBox: {
+        condition: !carData.gearBox,
+        errorMessage: "Обов'язково оберіть тип коробки передач",
+      },
+      fuelType: {
+        condition: !carData.fuelType,
+        errorMessage: "Обов'язково оберіть тип пального",
+      },
+      consumption: {
+        condition: !carData.consumption || carData.consumption <= 0,
+        errorMessage: "Обов'язково введіть розхід",
+      },
+      engineVolume: {
+        condition: !carData.engineVolume || carData.engineVolume <= 0,
+        errorMessage: "Обов'язково введіть об'єм (більше 0)",
+      },
+      enginePower: {
+        condition: !carData.enginePower || carData.enginePower <= 0,
+        errorMessage: "Обов'язково введіть потужність (більше 0)",
+      },
+      mainImage: {
+        condition: !carData.mainImage,
+        errorMessage: "Обов'язково додайте основне фото",
+      },
+    };
+
     let formIsCorrect = true;
     let newErrorsTexts = { ...errorsTexts };
-    if (!carData.brand) {
-      newErrorsTexts.brandError = "Обов'язково оберіть марку авто";
-      formIsCorrect = false;
-    } else {
-      newErrorsTexts.brandError = "";
-    }
 
-    if (!carData.class) {
-      newErrorsTexts.classError = "Обов'язково оберіть клас авто";
-      formIsCorrect = false;
-    } else {
-      newErrorsTexts.classError = "";
-    }
+    // Перевіряємо кожне поле на відповідність умові
+    Object.keys(fieldValidations).forEach((field) => {
+      const { condition, errorMessage } = fieldValidations[field];
+      if (condition) {
+        newErrorsTexts[`${field}Error`] = errorMessage;
+        console.log(errorMessage);
+        formIsCorrect = false;
+      } else {
+        newErrorsTexts[`${field}Error`] = "";
+      }
+    });
 
-    if (!carData.gearBox) {
-      newErrorsTexts.gearBoxError = "Обов'язково оберіть тип коробки передач";
-      formIsCorrect = false;
-    } else {
-      newErrorsTexts.gearBoxError = "";
-    }
-
-    if (!carData.fuelType) {
-      newErrorsTexts.fuelTypeError = "Обов'язково оберіть тип пального";
-      formIsCorrect = false;
-    } else {
-      newErrorsTexts.fuelTypeError = "";
-    }
-
-    setErrorsTexts(newErrorsTexts);
     if (!formIsCorrect) {
       newErrorsTexts.globalError = "Заповніть всі поля";
       setErrorsTexts(newErrorsTexts);
       return;
     }
+
+    setErrorsTexts(newErrorsTexts);
 
     const dataToSend = convertToSnakeCase(carData);
 
@@ -216,8 +246,15 @@ const AddCarForm = () => {
       }
     };
 
+    const getLocations = async () => {
+      const response = await axiosConfig.get("locations");
+      console.log("Locations: ", locations);
+      setLocations(response.data);
+    };
+
     getBrands();
     getCarClasses();
+    getLocations();
 
     if (id) {
       setIsEditing(true);
@@ -248,8 +285,13 @@ const AddCarForm = () => {
                       name="name"
                       value={carData.name}
                       onChange={handleChange}
-                      required
                     />
+
+                    {errorsTexts.nameError && (
+                      <p className="error-text">
+                        <small>{errorsTexts.nameError}</small>
+                      </p>
+                    )}
                   </div>
 
                   <div className="input-container">
@@ -281,22 +323,21 @@ const AddCarForm = () => {
                     <br />
 
                     <select
-                      name="class"
-                      value={carData.class}
+                      name="carClass"
+                      value={carData.carClass}
                       onChange={handleChange}
                     >
                       <option value="">Оберіть клас авто</option>
                       {carClasses.map((carClass) => (
                         <option key={carClass[0]} value={carClass[0]}>
                           {carClass[1]}{" "}
-                          {/* Виводимо назву класу, наприклад, "Бізнес" */}
                         </option>
                       ))}
                     </select>
 
-                    {errorsTexts.classError && (
+                    {errorsTexts.carClassError && (
                       <p className="error-text">
-                        <small>{errorsTexts.classError}</small>
+                        <small>{errorsTexts.carClassError}</small>
                       </p>
                     )}
                   </div>
@@ -329,6 +370,11 @@ const AddCarForm = () => {
                       onChange={handleChange}
                     />{" "}
                     Напівавтоматична
+                    {errorsTexts.gearBoxError && (
+                      <p className="error-text">
+                        <small>{errorsTexts.gearBoxError}</small>
+                      </p>
+                    )}
                   </div>
 
                   {/* Fuel Type Radio Buttons */}
@@ -367,6 +413,11 @@ const AddCarForm = () => {
                       onChange={handleChange}
                     />{" "}
                     Гібрид
+                    {errorsTexts.fuelTypeError && (
+                      <p className="error-text">
+                        <small>{errorsTexts.fuelTypeError}</small>
+                      </p>
+                    )}
                   </div>
 
                   {/* Consumption */}
@@ -379,9 +430,14 @@ const AddCarForm = () => {
                       name="consumption"
                       value={carData.consumption}
                       onChange={handleChange}
-                      required
-                      min="0.1"
+                      // required
+                      // min="0.1"
                     />
+                    {errorsTexts.consumptionError && (
+                      <p className="error-text">
+                        <small>{errorsTexts.consumptionError}</small>
+                      </p>
+                    )}
                   </div>
 
                   {/* Engine Volume */}
@@ -394,9 +450,14 @@ const AddCarForm = () => {
                       name="engineVolume"
                       value={carData.engineVolume}
                       onChange={handleChange}
-                      required
-                      min="0.1"
+                      // required
+                      // min="0.1"
                     />
+                    {errorsTexts.engineVolumeError && (
+                      <p className="error-text">
+                        <small>{errorsTexts.engineVolumeError}</small>
+                      </p>
+                    )}
                   </div>
 
                   {/* Engine Power  */}
@@ -409,9 +470,34 @@ const AddCarForm = () => {
                       step="0.1"
                       value={carData.enginePower}
                       onChange={handleChange}
-                      required
-                      min="0.1"
+                      // required
+                      // min="0.1"
                     />
+                    {errorsTexts.enginePowerError && (
+                      <p className="error-text">
+                        <small>{errorsTexts.enginePowerError}</small>
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="input-container">
+                    <label>Локація*</label>
+                    <br />
+                    <select
+                      name="location"
+                      value={carData.location}
+                      onChange={handleChange}
+                    >
+                      <option value="" disabled>
+                        Виберіть локацію
+                      </option>
+
+                      {locations.map((location) => (
+                        <option value={location.id}>
+                          {location.city}, {location.address}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   {/* Description */}
@@ -438,6 +524,7 @@ const AddCarForm = () => {
                   <AddMainImage
                     carDataObj={carData}
                     setCarData={setCarData}
+                    mainImageError={errorsTexts.mainImageError}
                   ></AddMainImage>
                   <AddAdditionalImages
                     carDataObj={carData}

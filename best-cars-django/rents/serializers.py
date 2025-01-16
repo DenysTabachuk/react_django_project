@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Rental, Location
+from .models import Rental
 from cars.serializers import CarGetSerializer
 from users.serializers import UserDetailSerializer
 
@@ -29,16 +29,9 @@ class RentalCreateSerializer(serializers.ModelSerializer):
         return value
 
 
-class LocationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Location
-        fields = '__all__'
-
-
 class RentalGetSerializer(serializers.ModelSerializer):
     car = CarGetSerializer()
     user = UserDetailSerializer()
-    location = LocationSerializer()
 
     class Meta:
         model = Rental

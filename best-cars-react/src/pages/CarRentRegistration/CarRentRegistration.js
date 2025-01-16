@@ -36,7 +36,7 @@ export default function CarRentRegistration() {
   const [additionalComment, setAdditionalComment] = useState("");
   const [dates, setDates] = useState({ startDate: "", endDate: "" });
   const [locations, setLocations] = useState([]);
-  const [selectedLocation, setSelectedLocation] = useState();
+  const [selectedLocation, setSelectedLocation] = useState(1);
 
   const handleLocationChange = (e) => {
     setSelectedLocation(e.target.value);
@@ -152,6 +152,7 @@ export default function CarRentRegistration() {
         comment: additionalComment,
         payment_method: paymentMethod,
         location: selectedLocation,
+        phone_number: userInfo.phone_number,
       };
 
       if (dates.startDate === "" || dates.endDate === "") {
@@ -198,13 +199,14 @@ export default function CarRentRegistration() {
               ></OptionServices>
 
               {/* можливо це зараз зайве */}
-              {/* <ContactInfo
+              <ContactInfo
                 userInfo={userInfo}
                 onChangeAction={handleContactInfoChange}
-              ></ContactInfo> */}
+              ></ContactInfo>
 
               <PaymentMethod
                 onChangeAction={handlePaymentMethodChange}
+                paymentMethod={paymentMethod}
               ></PaymentMethod>
 
               <DatePicking
@@ -225,26 +227,6 @@ export default function CarRentRegistration() {
                   placeholder="Напишіть ваш коментар тут..."
                   value={additionalComment}
                 ></textarea>
-              </div>
-
-              <div id="location-wrapper">
-                <h3>Локація</h3>
-                <div id="location-selection">
-                  <select
-                    value={selectedLocation}
-                    onChange={handleLocationChange}
-                  >
-                    <option value="" disabled>
-                      Виберіть локацію
-                    </option>
-
-                    {locations.map((location) => (
-                      <option value={location.id}>
-                        {location.city}, {location.address}
-                      </option>
-                    ))}
-                  </select>
-                </div>
               </div>
 
               <OrderSummary

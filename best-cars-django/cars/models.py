@@ -6,11 +6,22 @@ class Brand(models.Model):
 
     def __str__(self):
         return self.name
+    
+    
+class Location(models.Model):
+    city = models.CharField(max_length=100)
+    address = models.CharField(max_length=255)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.city} - {self.address}"
 
 
 class Car(models.Model):
     CAR_CLASS = [
-        ('buiness', 'Бізнес'),
+        ('buisness', 'Бізнес'),
         ('economy', 'Економ'),
         ('middle', 'Середній'),
     ]
@@ -31,15 +42,16 @@ class Car(models.Model):
     name = models.CharField(max_length=255)
     gear_box = models.CharField(max_length=50, choices=GEAR_BOX, default='manual')
     fuel_type = models.CharField(max_length=50, choices=FUEL_TYPE, default='petrol')
-    consumption = models.DecimalField(max_digits=4, decimal_places=1)  
-    engine_volume = models.DecimalField(max_digits=3, decimal_places=1)  
-    engine_power = models.IntegerField(null=True, blank=True)
+    consumption = models.DecimalField(max_digits=5, decimal_places=1)  
+    engine_volume = models.DecimalField(max_digits=5, decimal_places=1)  
+    engine_power = models.DecimalField(max_digits=5, decimal_places=1,null=True, blank=True)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, null=True, blank=True)  
     prices = models.JSONField()  
     main_image = models.ImageField(upload_to='cars/') 
     additional_functions = models.JSONField(default=list, blank=True)  
-    description = models.TextField()
+    description = models.TextField(blank=True)
     car_class = models.CharField(max_length=50, choices=CAR_CLASS, default='middle')
+    location = models.ForeignKey('Location', on_delete=models.CASCADE, related_name='rentals', null=True, blank=True)
     
     def __str__(self):
         return self.name

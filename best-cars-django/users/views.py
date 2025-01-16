@@ -47,7 +47,7 @@ class LoginView(APIView):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data
-            is_admin = user.groups.filter(name='admin').exists()  
+            is_admin = user.is_staff
             login(request, user)
 
             refresh = RefreshToken.for_user(user)

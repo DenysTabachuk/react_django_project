@@ -30,6 +30,10 @@
   height: 100%;
 }
 
+.added-image {
+  border-radius: 18px;
+}
+
 .added-image-container,
 #add-additional-img {
   margin: 10px;
@@ -190,6 +194,7 @@ td {
   height: 200px;
   border-radius: 20px;
   border: 1px solid gray;
+  margin: 20px 0px 20px;
 }
 
 #add-additional-img {
@@ -206,4 +211,8 @@ td {
   #column-container #column1 {
     width: 100%;
   }
+}
+
+#main-image-wrapper {
+  margin-top: 20px;
 }

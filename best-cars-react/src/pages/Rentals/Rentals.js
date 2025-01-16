@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axiosConfig from "../../api/axiosConfig.js";
 import Header from "../../components/Header/Header.js";
 import Footer from "../../components/Footer/Footer.js";
+import RentalItem from "./components/RentalItem.js";
 import "./Rentals.css";
 
 export default function RentalConfirmation() {
@@ -33,26 +34,6 @@ export default function RentalConfirmation() {
 
     getRentals();
   }, []); // Виконати один раз при завантаженні компонента
-
-  const handleRentalStatusChange = async (newStatus, rentalId) => {
-    try {
-      const response = await axiosConfig.patch(
-        `/rentals/${rentalId}/`,
-        { approval_status: newStatus },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      console.log(
-        `Status of rental with id - ${rentalId} has changed successfully`
-      );
-      window.location.reload();
-    } catch (error) {
-      console.error("Error changing status:", error);
-    }
-  };
 
   // Визначаємо масив оренд для відображення згідно з фільтром
   let rentalsToShow = [];
@@ -90,58 +71,10 @@ export default function RentalConfirmation() {
         <div id="rentals-container">
           {rentalsToShow.map((rental) => (
             <div className="rental-container" key={"rental" + rental.id}>
-              <div className="profile-car-item">
-                <img src={rental.car.main_image_url} alt={rental.car.name} />
-                <div className="rent-info">
-                  <h2>{rental.car.name}</h2>
-                  <p className="description">
-                    {new Date(rental.start_date).toLocaleDateString("uk-UA")}-
-                    {new Date(rental.end_date).toLocaleDateString("uk-UA")}
-                  </p>
-                  <p className="description">
-                    Днів оренди:{" "}
-                    {(
-                      (new Date(rental.end_date) -
-                        new Date(rental.start_date)) /
-                      (1000 * 3600 * 24)
-                    ).toFixed(0)}
-                  </p>
-                  <p className="description">
-                    {rental.location.city}, {rental.location.address}
-                  </p>
-                  <p>
-                    <b>{rental.total_price}$</b>
-                  </p>
-                </div>
-                <div className="user-info">
-                  <h3>{rental.user.email}</h3>
-                  <br />
-                  {rental.user.phone_number && rental.user.phone_number}
-                  <br />
-                  {rental.user.first_name && rental.user.first_name}{" "}
-                  {rental.user.last_name && rental.user.last_name}
-                </div>
-                {statusFilter === "pending" && (
-                  <div className="buttons-container">
-                    <button
-                      className="default-button bg-green"
-                      onClick={() =>
-                        handleRentalStatusChange("approved", rental.id)
-                      }
-                    >
-                      Прийняти
-                    </button>
-                    <button
-                      className="default-button bg-red"
-                      onClick={() =>
-                        handleRentalStatusChange("rejected", rental.id)
-                      }
-                    >
-                      Відхилити
-                    </button>
-                  </div>
-                )}
-              </div>
+              <RentalItem
+                rentalObj={rental}
+                statusFilter={statusFilter}
+              ></RentalItem>
             </div>
           ))}
         </div>

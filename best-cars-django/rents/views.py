@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import *
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Rental, Location
+from .models import Rental
 from rest_framework.exceptions import NotFound
 
 class RentalView(APIView):
@@ -57,21 +57,28 @@ class RentalView(APIView):
             return Response({
                 "message": "Невірний статус. Використовуйте 'pending', 'approved' або 'rejected'."
             }, status=status.HTTP_400_BAD_REQUEST)
-          # Оновлюємо статус
         rental.approval_status = approval_status
         rental.save()
 
-        # Повертаємо відповідь з оновленими даними оренди
         serializer = RentalGetSerializer(rental)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     
-class LocationsView(APIView):
-    permission_classes = [AllowAny]
+    def delete(self, request, rental_id):
+        """Видалення оренди за ID."""
+        try:
+            rental = Rental.objects.get(id=rental_id)
+        except Rental.DoesNotExist:
+            raise NotFound("Оренду не знайдено.")
+        
+        if not request.user.is_staff:
+            return Response({
+                "message": "У вас немає прав для видалення цієї оренди."
+            }, status=status.HTTP_403_FORBIDDEN)
 
-    def get(self, request):
-        locations = Location.objects.all()  
-        serializer = LocationSerializer(locations, many=True) 
-        return Response(serializer.data) 
+        rental.delete()
+        return Response({
+            "message": f"Оренда з ID {rental_id} успішно видалена."
+        }, status=status.HTTP_204_NO_CONTENT)
 
 

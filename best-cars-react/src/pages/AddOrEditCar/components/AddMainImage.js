@@ -1,7 +1,11 @@
 import { useRef } from "react";
 import AddSmthImage from "./AddSmthImage";
 
-export default function AddMainImage({ carDataObj, setCarData }) {
+export default function AddMainImage({
+  carDataObj,
+  setCarData,
+  mainImageError,
+}) {
   console.log(carDataObj);
   const fileInputRef = useRef(null);
 
@@ -21,8 +25,13 @@ export default function AddMainImage({ carDataObj, setCarData }) {
   };
 
   return (
-    <>
+    <div id="main-image-wrapper">
       <label>Основне фото авто*</label>
+      {mainImageError && (
+        <p className="error-text">
+          <small>{mainImageError}</small>
+        </p>
+      )}
       <div id="main-image-container">
         {carDataObj.mainImage ? (
           <>
@@ -56,6 +65,6 @@ export default function AddMainImage({ carDataObj, setCarData }) {
           </>
         )}
       </div>
-    </>
+    </div>
   );
 }

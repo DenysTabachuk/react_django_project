@@ -22,7 +22,6 @@ export default function PriceTable({ carDataObj, setCarData }) {
   console.log("PriceTable: ", prices);
   return (
     <>
-      <label>Ціна</label>
       <table>
         <thead>
           <tr>
@@ -34,7 +33,7 @@ export default function PriceTable({ carDataObj, setCarData }) {
         <tbody>
           {prices.map((item, index) => (
             <tr key={index} className="price-row">
-              <td>{item.range}</td>
+              <td>{item.range} дн.</td>
               <td className="cell-input-container">
                 {item.editing ? (
                   <input

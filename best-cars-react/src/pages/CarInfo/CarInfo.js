@@ -15,7 +15,7 @@ export default function CarInfo() {
   const navigate = useNavigate();
 
   const carClassMap = {
-    buiness: "Бізнес",
+    buisness: "Бізнес",
     economy: "Економ",
     middle: "Середній",
   };
@@ -80,15 +80,21 @@ export default function CarInfo() {
         <div id="car-info-container">
           <div id="column1">
             <h1>Прокат {car.name}</h1>
-            <p className="description">{carClassMap[car.car_class]} клас</p>
+            <p className="description">
+              <big>{carClassMap[car.car_class]} клас</big>
+            </p>
 
-            <CutsomSlider>
-              {car.additional_images.map((item, index) => {
-                return (
-                  <img key={item.id} src={item.image} alt={item.alt_text} />
-                );
-              })}
-            </CutsomSlider>
+            {car.additional_images.length > 0 ? (
+              <CutsomSlider>
+                {car.additional_images.map((item, index) => {
+                  return (
+                    <img key={item.id} src={item.image} alt={item.alt_text} />
+                  );
+                })}
+              </CutsomSlider>
+            ) : (
+              <img src="/images/no_image_available.png" alt="" width="100%" />
+            )}
 
             <div id="main-characteristics-container">
               <ul>
@@ -117,6 +123,17 @@ export default function CarInfo() {
                   </big>
                 </li>
               </ul>
+            </div>
+
+            <div id="location-wrapper">
+              <h2>Локація</h2>
+              <div id="location-container">
+                <p className="description">
+                  <big>
+                    {car.location.city}, {car.location.address}
+                  </big>
+                </p>
+              </div>
             </div>
 
             <div id="additional-functions-wrapper">

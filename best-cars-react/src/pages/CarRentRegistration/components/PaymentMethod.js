@@ -13,10 +13,10 @@ const paymetMethods = [
   },
 ];
 
-export default function PaymentMethod({ onChangeAction }) {
+export default function PaymentMethod({ onChangeAction, paymentMethod }) {
   return (
     <div id="payment-method-wrapper">
-      <h3>Спосіб оплати</h3>
+      <h3>Спосіб оплати*</h3>
       <p className="description">При сплаті онлайн знижка</p>
 
       <div id="payment-methods-container">
@@ -32,6 +32,7 @@ export default function PaymentMethod({ onChangeAction }) {
                       name="choice"
                       value={method.value}
                       onClick={onChangeAction}
+                      checked={paymentMethod === method.value}
                     ></input>
                     <img src={method.icon} alt="" className="icon" />
                     <label htmlFor={"option" + index}>{method.name}</label>
