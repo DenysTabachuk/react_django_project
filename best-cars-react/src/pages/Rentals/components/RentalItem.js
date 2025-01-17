@@ -1,6 +1,8 @@
 import axiosConfig from "../../../api/axiosConfig.js";
+import React, { useState, useEffect } from "react";
 
-export default function RentalItem({ rentalObj, statusFilter }) {
+export default function RentalItem({ rentalObj, statusFilter, screenWidth }) {
+  console.log("rentalObj", rentalObj);
   const handleRentalStatusChange = async (newStatus, rentalId) => {
     try {
       const response = await axiosConfig.patch(
@@ -32,16 +34,54 @@ export default function RentalItem({ rentalObj, statusFilter }) {
 
   return (
     <div className="rental-container">
-      <img
-        className="delete-rental-icon"
-        src="/icons/bin.png"
-        alt="delete rental"
-        onClick={() => handleRentaDelete(rentalObj.id)}
-      />
+      <div
+        className="delelete-rental-icon-container"
+        style={{
+          padding: "10px 30px 10px 30px",
+          display: "flex",
+          justifyContent: "end",
+        }}
+      >
+        <img
+          className="delete-rental-icon"
+          src="/icons/bin.png"
+          alt="delete rental"
+          onClick={() => handleRentaDelete(rentalObj.id)}
+          style={{
+            position: "relative",
+            top: "60px",
+            height: " 30px",
+          }}
+        />
+      </div>
 
-      <div className="rental-item">
-        <img src={rentalObj.car.main_image_url} alt={rentalObj.car.name} />
-        <div className="rent-info">
+      <div
+        className="rental-item"
+        style={{
+          border: "1px solid gray",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: screenWidth < 1400 ? "start" : "center",
+          flexDirection: screenWidth < 1400 ? "column" : "row",
+          gap: "15px",
+          padding: "10px 30px 10px 30px",
+        }}
+      >
+        <img
+          src={rentalObj.car.main_image_url}
+          alt={rentalObj.car.name}
+          style={{
+            width: screenWidth < 1400 && "100%",
+          }}
+        />
+
+        <div
+          className="rent-info"
+          style={{
+            width: screenWidth < 1400 && "100%",
+            borderTop: screenWidth < 1400 && "1px solid gray",
+          }}
+        >
           <h2>{rentalObj.car.name}</h2>
           <p className="description">
             {new Date(rentalObj.start_date).toLocaleDateString("uk-UA")}-
@@ -55,22 +95,64 @@ export default function RentalItem({ rentalObj, statusFilter }) {
             ).toFixed(0)}
           </p>
           <p className="description">
-            {rentalObj.location.city}, {rentalObj.location.address}
+            {rentalObj.car.location.city}, {rentalObj.car.location.address}
           </p>
           <p>
             <b>{rentalObj.total_price}$</b>
           </p>
         </div>
-        <div className="user-info">
-          <h3>{rentalObj.user.email}</h3>
-          <br />
-          {rentalObj.user.phone_number && rentalObj.user.phone_number}
-          <br />
-          {rentalObj.user.first_name && rentalObj.user.first_name}{" "}
-          {rentalObj.user.last_name && rentalObj.user.last_name}
+
+        <div
+          className="additional-services"
+          style={{
+            display: "flex",
+            gap: "8px",
+            justifyContent: "space-between",
+            flexDirection: "column",
+            aligItems: "flex-start",
+            width: screenWidth < 1400 && "100%",
+            borderTop: screenWidth < 1400 && "1px solid gray",
+          }}
+        >
+          <h3>Додткові послуги</h3>
+          {rentalObj.additional_services.length == 0 && (
+            <p className="description">Додаткові послуги відсутні</p>
+          )}
+          {rentalObj.additional_services.map((service) => (
+            <div
+              className="service-price"
+              style={{ display: "flex", gap: "8px" }}
+            >
+              <span className="description">{service.name}</span>-
+              <span>{service.price}$</span>
+            </div>
+          ))}
         </div>
+
+        <div
+          className="user-info"
+          style={{
+            width: screenWidth < 1400 && "100%",
+            borderTop: screenWidth < 1400 && "1px solid gray",
+          }}
+        >
+          <h3>
+            {rentalObj.user.first_name && rentalObj.user.first_name}{" "}
+            {rentalObj.user.last_name && rentalObj.user.last_name}
+          </h3>
+          <p className="description">{rentalObj.user.email}</p>
+          <p className="description">{rentalObj.phone_number}</p>
+          <br />
+        </div>
+
         {statusFilter === "pending" && (
-          <div className="buttons-container">
+          <div
+            className="buttons-container"
+            style={{
+              width: screenWidth < 1400 && "100%",
+              borderTop: screenWidth < 1400 && "1px solid gray",
+            }}
+          >
             <button
               className="default-button bg-green"
               onClick={() => handleRentalStatusChange("approved", rentalObj.id)}

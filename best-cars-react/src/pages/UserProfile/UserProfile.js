@@ -344,6 +344,15 @@ export default function UserProfile() {
                   <p>
                     <b>{rental.total_price}$</b>
                   </p>
+                  {rental.approval_status === "pending" && (
+                    <p className="blue-text">Очікує підтвердження</p>
+                  )}
+                  {rental.approval_status === "rejected" && (
+                    <p className="error-text">Оренду відхилено</p>
+                  )}
+                  {rental.approval_status === "approved" && (
+                    <p className="green-text">Оренду підтверджено</p>
+                  )}
                 </div>
               </div>
             ))

@@ -9,23 +9,3 @@
   flex-direction: column;
   gap: 20px;
 }
-
-#select-rental-status {
-  margin-top: 10px;
-  margin-bottom: 20px;
-  width: 25%;
-}
-
-.rental-item {
-  border: 1px solid gray;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.delete-rental-icon {
-  position: relative;
-  left: 95%;
-  top: 60px;
-  height: 30px;
-}

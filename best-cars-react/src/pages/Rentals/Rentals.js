@@ -6,11 +6,13 @@ import RentalItem from "./components/RentalItem.js";
 import "./Rentals.css";
 
 export default function RentalConfirmation() {
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
   const [pendingRentals, setPendingRentals] = useState([]);
   const [approvedRentals, setApprovedRentals] = useState([]);
   const [rejectedRentals, setRejectedRentals] = useState([]);
 
-  const [statusFilter, setStatusFilter] = useState("pending"); // Статус фільтру
+  const [statusFilter, setStatusFilter] = useState("pending");
 
   useEffect(() => {
     const getRentals = async () => {
@@ -33,9 +35,19 @@ export default function RentalConfirmation() {
     };
 
     getRentals();
-  }, []); // Виконати один раз при завантаженні компонента
+  }, []);
 
-  // Визначаємо масив оренд для відображення згідно з фільтром
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   let rentalsToShow = [];
   if (statusFilter === "pending") {
     rentalsToShow = pendingRentals;
@@ -53,13 +65,18 @@ export default function RentalConfirmation() {
         <h1 className="centered-text">Оренди</h1>
 
         <label>
-          <b>Статус оренди:</b>
+          <b>
+            <big>Статус оренди:</big>
+          </b>
         </label>
         <br />
         <select
           id="select-rental-status"
           value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)} // Змінюємо статус фільтру
+          onChange={(e) => setStatusFilter(e.target.value)}
+          style={{
+            width: screenWidth < 1400 ? "100%" : "25%",
+          }}
         >
           <option value="pending">Очікують на підтвердження</option>
           <option value="approved">Підтверджено</option>
@@ -74,6 +91,7 @@ export default function RentalConfirmation() {
               <RentalItem
                 rentalObj={rental}
                 statusFilter={statusFilter}
+                screenWidth={screenWidth}
               ></RentalItem>
             </div>
           ))}

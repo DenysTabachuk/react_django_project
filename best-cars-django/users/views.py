@@ -13,6 +13,9 @@ from django.contrib.auth.hashers import check_password
 
 
 class RegisterView(APIView):
+    authentication_classes = []
+
+
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         print("Register",request.data)
@@ -45,6 +48,8 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
+    authentication_classes = []
+
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():

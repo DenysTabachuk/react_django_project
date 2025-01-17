@@ -7,6 +7,10 @@ from django.db.models import Q
 
 
 class BrandListView(APIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
+
+
     def get(self, request):
         brands = Brand.objects.all().values('id', 'name')
         serializer = BrandSerializer(brands, many=True)
@@ -14,12 +18,16 @@ class BrandListView(APIView):
     
 
 class CarView(APIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
     def get_permissions(self):
         if self.request.method == 'GET':
             return [AllowAny()]
         return [IsAdminUser()]
+    
 
     def get(self, request, pk=None):
+
         if pk is None:
             cars = Car.objects.all()
             
@@ -132,12 +140,13 @@ class CarView(APIView):
     
 
 class CarClassList(APIView):
+    authentication_classes = []
     def get(self, request):
         car_classes = Car.CAR_CLASS  
         return Response(car_classes)
 
 class LocationsView(APIView):
-    permission_classes = [AllowAny]
+    authentication_classes = []
 
     def get(self, request):
         locations = Location.objects.all()  

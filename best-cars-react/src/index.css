@@ -15,6 +15,14 @@ html {
   margin: 0;
 }
 
+.blue-text {
+  color: blue;
+}
+
+.green-text {
+  color: green;
+}
+
 #page-content {
   margin: 20px 3.5% 60px 3.5%;
   min-height: 400px;
