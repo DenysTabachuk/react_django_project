@@ -1,18 +1,20 @@
 import "./Select.css";
 
 export default function Select({
+  name,
   values,
   defaultValue,
   handleChange,
   selectedValue,
 }) {
-  const handleSelectChange = (event) => {
-    handleChange(event.target.value);
+  // let value;
+  const handleSelectChange = (e) => {
+    handleChange(name, e.target.value);
   };
 
   return (
     <div className="select-container">
-      <select value={selectedValue} onChange={handleSelectChange}>
+      <select value={selectedValue} onChange={(e) => handleSelectChange(e)}>
         <option value="" disabled>
           {defaultValue}
         </option>
@@ -23,7 +25,7 @@ export default function Select({
         ))}
       </select>
       {selectedValue && (
-        <i className="fas fa-times" onClick={() => handleChange("")}></i>
+        <i className="fas fa-times" onClick={() => handleChange(name, "")}></i>
       )}
     </div>
   );

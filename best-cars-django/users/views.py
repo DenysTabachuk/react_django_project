@@ -15,7 +15,7 @@ from django.contrib.auth.hashers import check_password
 class RegisterView(APIView):
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
-        print(request.data)
+        print("Register",request.data)
         if serializer.is_valid():
             user = serializer.save()
             verification = EmailVerificationCode.objects.create(user=user)
@@ -24,7 +24,7 @@ class RegisterView(APIView):
                 f"Ваш код підтвердження: {verification.code}",
                 'your_email@gmail.com',
                 [user.email],)
-            return Response({'message': 'Verification code sent to email.'}, status=status.HTTP_201_CREATED)
+            return Response({'message': 'Код підтвердження відправлено на вашу еклектронну адресу.'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     # confirm email
@@ -39,7 +39,9 @@ class RegisterView(APIView):
             email_verif.delete() 
             user.save()
             return Response({'message': 'Email verified successfully'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            print(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(APIView):
@@ -89,18 +91,18 @@ class UserProfileView(APIView):
 
         if old_password and new_password:
             if not check_password(old_password, user.password):
-                return Response({'error': 'Old password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error': 'Cтарий пароль вказано не вірно'}, status=status.HTTP_400_BAD_REQUEST)
         
             # Змінити пароль
             user.set_password(new_password)
             user.save()
 
-            return Response({'message': 'Password updated successfully'})
+            return Response({'message': 'Пароль успішно оновлено'})
 
         serializer = UserProfileUpdateSerializer(user, data=request.data, partial=True)
         print(request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'message': 'Profile updated successfully', 'data': serializer.data})
+            return Response({'message': 'Профіль успішно оновлено', 'data': serializer.data})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     

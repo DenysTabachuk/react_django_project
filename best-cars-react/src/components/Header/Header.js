@@ -26,12 +26,6 @@ export default function Header() {
     setMenuOpen(!menuOpen);
   };
 
-  if (!isTokenValid(accessToken)) {
-    refreshExpiredToken(refreshToken);
-    console.log("Token refresheed");
-    accessToken = localStorage.getItem("access_token");
-  }
-
   return (
     <header>
       <h1>

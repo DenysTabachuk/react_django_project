@@ -11,6 +11,7 @@ import { optionalServices } from "./components/OptionServices.js"; // можли
 import axiosConfig from "../../api/axiosConfig.js";
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { validatePhoneNumber } from "../../validation/UserInfoValidation.js";
 
 export default function CarRentRegistration() {
   const { id } = useParams();
@@ -18,6 +19,9 @@ export default function CarRentRegistration() {
   let accessToken = localStorage.getItem("access_token");
 
   const [errorMessage, setErrorMessage] = useState("");
+  const [phoneErrorMessage, setPhoneErrorMessage] = useState("");
+  const [dateErrorMessage, setDateErrorMessage] = useState("");
+
   const [loadingData, setLoadingData] = useState(true);
 
   const [userInfo, setUserInfo] = useState({
@@ -109,6 +113,7 @@ export default function CarRentRegistration() {
 
   const handleContactInfoChange = (e) => {
     const { name, value } = e.target;
+    console.log("handleContactInfoChange", name, value);
     setUserInfo((prevData) => ({
       ...prevData,
       [name]: value,
@@ -155,9 +160,25 @@ export default function CarRentRegistration() {
         phone_number: userInfo.phone_number,
       };
 
+      setDateErrorMessage("");
+      setPhoneErrorMessage("");
+
+      let rentalDataIsValid = true;
       if (dates.startDate === "" || dates.endDate === "") {
-        return setErrorMessage("Виберіть коректні дати");
+        setDateErrorMessage("Виберіть коректні дати");
+        rentalDataIsValid = false;
       }
+
+      if (!validatePhoneNumber(userInfo.phone_number)) {
+        console.log(
+          userInfo.phone_number,
+          validatePhoneNumber(userInfo.phone_number)
+        );
+        setPhoneErrorMessage("Введіть коретний номер : +380 xx xxx xxxx");
+        rentalDataIsValid = false;
+      }
+
+      if (!rentalDataIsValid) return;
 
       console.log("Rental data", rentalData);
       const response = await fetch(`http://localhost:8000/rentals/`, {
@@ -202,6 +223,7 @@ export default function CarRentRegistration() {
               <ContactInfo
                 userInfo={userInfo}
                 onChangeAction={handleContactInfoChange}
+                phoneNumberError={phoneErrorMessage}
               ></ContactInfo>
 
               <PaymentMethod
@@ -212,6 +234,7 @@ export default function CarRentRegistration() {
               <DatePicking
                 onChangeAction={handleDateChange}
                 dates={dates}
+                dateErrorText={dateErrorMessage}
               ></DatePicking>
             </div>
 

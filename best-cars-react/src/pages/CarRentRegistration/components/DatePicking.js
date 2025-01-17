@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function DatePicking({ onChangeAction, dates }) {
+export default function DatePicking({ onChangeAction, dates, dateErrorText }) {
   return (
     <div id="date-picker">
       <h2>Час оренди*</h2>
@@ -28,6 +28,12 @@ export default function DatePicking({ onChangeAction, dates }) {
           min={dates.startDate} // Кінець не може бути раніше початку
         />
       </div>
+
+      {dateErrorText && (
+        <p className="error-text">
+          <small>{dateErrorText}</small>
+        </p>
+      )}
     </div>
   );
 }

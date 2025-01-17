@@ -124,6 +124,8 @@ td {
 .price-input {
   margin: 0 !important;
   padding: 8px;
+  border: 0 !important;
+  width: 100% !important;
 }
 
 .cell-button-container {

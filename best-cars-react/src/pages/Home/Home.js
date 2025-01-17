@@ -16,8 +16,10 @@ import "./Home.css";
 const Home = () => {
   const navigate = useNavigate();
   const [showFilters, setShowFilters] = useState(window.innerWidth > 1024);
+  const [moveSearch, setMoveSearch] = useState(window.innerWidth <= 1440);
   const [cars, setCars] = useState(null);
   const [carBrands, setCarBrands] = useState(null);
+  const [locations, setLocations] = useState([]);
 
   const [selectedFilters, setSelectedFilters] = useState({
     brand: "",
@@ -25,6 +27,7 @@ const Home = () => {
     carClass: "",
     gearBox: "",
     name: "",
+    location: "",
   });
   const [selectedSortBy, setSelectedSortBy] = useState("");
 
@@ -53,6 +56,17 @@ const Home = () => {
   };
 
   useEffect(() => {
+    const handleResize = () => {
+      setShowFilters(window.innerWidth > 1024);
+      setMoveSearch(window.innerWidth <= 1440);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
     const fetchBrands = async () => {
       try {
         const response = await axiosConfig.get("cars/brands");
@@ -64,10 +78,23 @@ const Home = () => {
       }
     };
 
+    const getLocations = async () => {
+      const response = await axiosConfig.get("locations");
+      console.log("Locations: ", locations);
+      setLocations(response.data);
+    };
+
+    getLocations();
     fetchBrands();
   }, []);
 
   useEffect(() => {
+    const locationObject = locations.find(
+      (item) =>
+        `${item.city},${item.address}`.trim() ===
+        selectedFilters.location.trim()
+    );
+
     const filters = {
       fuel_type: selectedFilters.fuelType
         ? fuelTypeMap[selectedFilters.fuelType]
@@ -82,6 +109,7 @@ const Home = () => {
           : "",
       brand: selectedFilters.brand,
       name: selectedFilters.name,
+      location: locationObject != null ? locationObject.id : "",
     };
 
     const fetchCars = async () => {
@@ -96,23 +124,11 @@ const Home = () => {
     fetchCars();
   }, [selectedFilters]);
 
-  const handleBrandChange = (value) => {
-    setSelectedFilters({ ...selectedFilters, brand: value });
-  };
-
-  const handleFuelChange = (value) => {
-    setSelectedFilters({
-      ...selectedFilters,
-      fuelType: value,
-    });
-  };
-
-  const handleCarClass = (value) => {
-    setSelectedFilters({ ...selectedFilters, carClass: value });
-  };
-
-  const handleGearBoxChange = (value) => {
-    setSelectedFilters({ ...selectedFilters, gearBox: value });
+  const handleFilterChange = (field, value) => {
+    setSelectedFilters((prevFilters) => ({
+      ...prevFilters,
+      [field]: value,
+    }));
   };
 
   const handleSortBy = (value) => {
@@ -128,10 +144,6 @@ const Home = () => {
     console.log("sortedCars", sortedCars);
 
     setCars(sortedCars);
-  };
-
-  const handleNameChange = (value) => {
-    setSelectedFilters({ ...selectedFilters, name: value });
   };
 
   const [text, setText] = useState("Натисни щоб побачити фільтри"); // test
@@ -168,41 +180,64 @@ const Home = () => {
 
       {carBrands !== null ? (
         <div id="page-content">
-          <div id="filters" style={{ display: !showFilters && "none" }}>
+          <div
+            id="filters"
+            style={{
+              // display: !showFilters ? "none" : moveSearch ? "flex" : "block",
+              // display: moveSearch ? "flex" : "block",
+              display: "flex",
+              flexDirection: moveSearch ? "column" : "row",
+              alignItems: moveSearch ? "start" : undefined,
+              gap: "20px",
+            }}
+          >
             <div id="select-container">
               <Select
+                name="brand"
                 values={carBrands.map((brand) => brand.name)}
                 defaultValue={"Марка"}
-                handleChange={handleBrandChange}
+                handleChange={handleFilterChange}
                 selectedValue={selectedFilters.brand}
               ></Select>
               <Select
+                name="fuelType"
                 values={fuelTypes}
                 defaultValue={"Тип палива"}
-                handleChange={handleFuelChange}
+                handleChange={handleFilterChange}
                 selectedValue={selectedFilters.fuelType}
               ></Select>
               <Select
+                name="carClass"
                 values={carClasses}
                 defaultValue={"Клас авто"}
-                handleChange={handleCarClass}
+                handleChange={handleFilterChange}
                 selectedValue={selectedFilters.carClass}
               ></Select>
               <Select
+                name="gearBox"
                 values={gearBoxTypes}
                 defaultValue={"Коробка передач"}
-                handleChange={handleGearBoxChange}
+                handleChange={handleFilterChange}
                 selectedValue={selectedFilters.gearBox}
+              ></Select>
+              <Select
+                name="location"
+                values={locations.map(
+                  (location) => location.city + "," + location.address
+                )}
+                defaultValue={"Локація"}
+                handleChange={handleFilterChange}
+                selectedValue={selectedFilters.location}
               ></Select>
               <Select
                 values={sortBy}
                 defaultValue={"Сортувати за"}
-                handleChange={handleSortBy}
+                handleChange={handleFilterChange}
                 selectedValue={selectedSortBy}
               ></Select>{" "}
             </div>
 
-            <Search handleSearchChange={handleNameChange}></Search>
+            <Search handleSearchChange={handleFilterChange}></Search>
           </div>
 
           {cars === null ? (
@@ -214,7 +249,7 @@ const Home = () => {
               {cars.map((car) => (
                 <CarCard
                   carObject={car}
-                  key={car.name}
+                  key={car.id}
                   customButton={
                     <button
                       className="rent-button"

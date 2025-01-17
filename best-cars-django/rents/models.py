@@ -32,14 +32,6 @@ class Rental(models.Model):
     )
     phone_number = models.CharField(
         max_length=15,  # Включає код країни і номер
-        validators=[
-            RegexValidator(
-                regex=r'^\+380\d{9}$',
-                message="Номер телефону має бути у форматі +380123456789",
-            )
-        ],
-        blank=True,  # Поле обов’язкове
-        null=True,
         default="+380")
 
 

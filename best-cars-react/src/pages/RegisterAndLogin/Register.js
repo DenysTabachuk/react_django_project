@@ -8,6 +8,7 @@ import { useNavigate, Link } from "react-router-dom";
 import {
   validatePassword,
   validatePhoneNumber,
+  validateEmail,
 } from "../../validation/UserInfoValidation.js";
 
 export default function Register() {
@@ -18,6 +19,8 @@ export default function Register() {
     email: "",
     password: "",
     confirm_password: "",
+    first_name: "", // Додано для імені
+    last_name: "", // Додано для прізвища
   });
 
   const [emailConfirmation, setEmailConfiramtion] = useState(false);
@@ -25,6 +28,7 @@ export default function Register() {
   const [message, setMessage] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [nameErrorMessage, setNameErrorMessage] = useState(""); // Додано для помилки імені
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -39,20 +43,41 @@ export default function Register() {
 
     setEmailErrorMessage("");
     setPasswordErrorMessage("");
+    setNameErrorMessage("");
 
-    // password validation
+    let formIsValid = true;
+    if (!formData.first_name || !formData.last_name) {
+      setNameErrorMessage("Ім'я та прізвище не можуть бути порожніми");
+      formIsValid = false;
+    }
+
+    if (!validateEmail(formData.email)) {
+      setEmailErrorMessage(
+        "Будь ласка, введіть коректну електронну пошту у форматі example@domain.com."
+      );
+      formIsValid = false;
+    }
+
+    if (formData.email === "") {
+      setEmailErrorMessage("Email не може бути порожнім");
+      formIsValid = false;
+    }
+
     if (!validatePassword(formData.password)) {
       setPasswordErrorMessage(
         "Пароль повинен містити хоча б одну велику літеру і одну цифру, мінімум 6 символів"
       );
-      return;
+      formIsValid = false;
     }
     if (formData.password !== formData.confirm_password) {
       setPasswordErrorMessage("Паролі не співпадають");
+      formIsValid = false;
     }
 
-    //
-    e.preventDefault();
+    if (!formIsValid) {
+      return;
+    }
+
     try {
       const response = await axiosConfig.post("users/register/", formData);
       setMessage(response.data.message);
@@ -73,7 +98,7 @@ export default function Register() {
       });
       navigate("/login");
     } catch (error) {
-      setMessage("Error: " + JSON.stringify(error.response.data));
+      setMessage(error.response.data.non_field_errors);
     }
   };
 
@@ -101,9 +126,7 @@ export default function Register() {
               pattern="\d{4}" // Перевірка, щоб це були лише цифри
               title="Код має складатися з 4 цифр"
             />
-            {/* <span className="error-text">
-              {codeErrorMessage !== "" && codeErrorMessage}
-            </span> */}
+            <span className="error-text">{message !== "" && message}</span>
 
             <button className="default-button" onClick={handleConfirmEmail}>
               Підтвердити
@@ -115,14 +138,39 @@ export default function Register() {
           <h2 className="centered-text">Реєстрація</h2>
           <form onSubmit={handleSubmit}>
             <div className="input-container">
+              <label>Ім'я:</label>
+              <br />
+              <input
+                type="text"
+                name="first_name"
+                value={formData.first_name}
+                onChange={handleChange}
+              />
+              <br />
+              <span className="error-text">{nameErrorMessage}</span>
+            </div>
+
+            <div className="input-container">
+              <label>Прізвище:</label>
+              <br />
+              <input
+                type="text"
+                name="last_name"
+                value={formData.last_name}
+                onChange={handleChange}
+              />
+              <br />
+              <span className="error-text">{nameErrorMessage}</span>
+            </div>
+
+            <div className="input-container">
               <label>Email:</label>
               <br />
               <input
-                type="email"
+                type="text"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                required
               />
               <br />
               <span className="error-text">
@@ -138,7 +186,6 @@ export default function Register() {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                required
               />
             </div>
 
@@ -150,7 +197,6 @@ export default function Register() {
                 name="confirm_password"
                 value={formData.confirm_password}
                 onChange={handleChange}
-                required
               />
               <span className="error-text">
                 {passwordErrorMessage !== "" && passwordErrorMessage}

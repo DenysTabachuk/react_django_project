@@ -35,27 +35,14 @@ export default function PriceTable({ carDataObj, setCarData }) {
             <tr key={index} className="price-row">
               <td>{item.range} дн.</td>
               <td className="cell-input-container">
-                {item.editing ? (
-                  <input
-                    type="number"
-                    className="price-input"
-                    value={item.price}
-                    onChange={(e) =>
-                      handleChangePrice(index, parseInt(e.target.value))
-                    }
-                  />
-                ) : (
-                  item.price
-                )}
-              </td>
-              <td className="cell-button-container">
-                <button
-                  type="button"
-                  className="edit-price-button"
-                  onClick={() => handleEditPrices(index)}
-                >
-                  {item.editing ? "Зберегти" : "Змінити"}
-                </button>
+                <input
+                  type="number"
+                  className="price-input"
+                  value={item.price}
+                  onChange={(e) =>
+                    handleChangePrice(index, parseInt(e.target.value))
+                  }
+                />
               </td>
             </tr>
           ))}

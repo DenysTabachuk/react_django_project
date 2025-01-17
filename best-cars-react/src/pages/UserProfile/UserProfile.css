@@ -50,6 +50,11 @@
   padding: 20px;
 }
 
+#change-password-container {
+  margin-top: 20px;
+  width: 500px;
+}
+
 #change-password-container input {
   width: 90%;
 }

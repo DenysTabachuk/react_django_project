@@ -17,7 +17,7 @@ class VerifyEmailSerializer(serializers.Serializer):
         try:
             email_verification = EmailVerificationCode.objects.get(user=user, code=code)
         except EmailVerificationCode.DoesNotExist:
-            raise serializers.ValidationError('Невірний email або код.')
+            raise serializers.ValidationError('Невірний код.')
 
         attrs['user'] = user
         return attrs
@@ -26,7 +26,7 @@ class VerifyEmailSerializer(serializers.Serializer):
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = [ 'email', 'password']
+        fields = [ 'email', 'password', 'first_name', 'last_name']
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
@@ -40,7 +40,9 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(
             username=username,
             email=validated_data.get('email'),
-            password=validated_data['password']
+            password=validated_data['password'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name']
         )
         return user
 
@@ -59,7 +61,7 @@ class LoginSerializer(serializers.Serializer):
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'last_name', 'password']
+        fields = ['phone_number', 'first_name', 'last_name', 'password']
 
        
 class UserDetailSerializer(serializers.ModelSerializer):

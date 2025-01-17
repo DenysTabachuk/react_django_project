@@ -30,6 +30,7 @@ class CarView(APIView):
             fuelType = request.GET.get('fuel_type')
             gearBox = request.GET.get('gear_box')
             carClass = request.GET.get('car_class')
+            location = request.GET.get('location')
 
             if name:
                 filters &= Q(name__icontains=name) 
@@ -41,6 +42,8 @@ class CarView(APIView):
                 filters &= Q(gear_box__exact=gearBox)
             if carClass:
                 filters &= Q(car_class__exact=carClass)
+            if location:
+                filters &= Q(location__exact=location)
 
             cars = cars.filter(filters)
             serializer = CarGetSerializer(cars, many=True, context={'request': request})
@@ -100,6 +103,8 @@ class CarView(APIView):
             for image in images_data:
                 CarImage.objects.create(car=car, image=image)
         else:
+            print(request.data)
+            print(serializer.errors)
             return Response({"errors": serializer.errors}, status=400)
 
         return Response(serializer.data, status=200)

@@ -89,7 +89,7 @@ const AddCarForm = () => {
       },
       consumption: {
         condition: !carData.consumption || carData.consumption <= 0,
-        errorMessage: "Обов'язково введіть розхід",
+        errorMessage: "Обов'язково введіть розхід (більше 0)",
       },
       engineVolume: {
         condition: !carData.engineVolume || carData.engineVolume <= 0,
@@ -152,7 +152,6 @@ const AddCarForm = () => {
     }
 
     try {
-      console.log("Id ", id);
       debugger;
       const result = isEditing
         ? await axiosConfig.put(`cars/${id}/`, formData, {
@@ -227,6 +226,7 @@ const AddCarForm = () => {
           carData.additionalImages = additionalImageFiles;
           delete carData.mainImageUrl;
           carData.mainImage = mainImageFile;
+          carData.location = carData.location.id;
           setCarData(carData);
         }
         console.log("Car data we are editing ", carData);
@@ -327,7 +327,9 @@ const AddCarForm = () => {
                       value={carData.carClass}
                       onChange={handleChange}
                     >
-                      <option value="">Оберіть клас авто</option>
+                      <option disabled value="">
+                        Оберіть клас авто
+                      </option>
                       {carClasses.map((carClass) => (
                         <option key={carClass[0]} value={carClass[0]}>
                           {carClass[1]}{" "}
@@ -400,8 +402,8 @@ const AddCarForm = () => {
                     <input
                       type="radio"
                       name="fuelType"
-                      value="electricity"
-                      checked={carData.fuelType === "electricity"}
+                      value="electric"
+                      checked={carData.fuelType === "electric"}
                       onChange={handleChange}
                     />{" "}
                     Електроенергія

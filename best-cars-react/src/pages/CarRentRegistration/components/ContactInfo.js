@@ -1,4 +1,8 @@
-export default function ContactInfo({ userInfo, onChangeAction }) {
+export default function ContactInfo({
+  userInfo,
+  onChangeAction,
+  phoneNumberError,
+}) {
   return (
     <div id="contact-info-wrapper">
       <h3>Контактні дані</h3>
@@ -44,6 +48,12 @@ export default function ContactInfo({ userInfo, onChangeAction }) {
             required
           />
         </div>
+
+        {phoneNumberError && (
+          <p className="error-text">
+            <small>{phoneNumberError}</small>
+          </p>
+        )}
 
         {/* <div className="label-input">
                     <label htmlFor="email">Електронна адреса:</label>
