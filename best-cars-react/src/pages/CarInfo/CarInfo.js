@@ -109,7 +109,8 @@ export default function CarInfo() {
                 <li>
                   <img src="/icons/car-info/fuel.png" className="icon" alt="" />
                   <big>
-                    {fuelTypeMap[car.fuel_type]}/{car.consumption}
+                    {fuelTypeMap[car.fuel_type]}/{car.consumption}{" "}
+                    {car.fuel_type == "electricity" ? "кВт·год" : "л"}
                   </big>
                 </li>
                 <li>
@@ -118,9 +119,7 @@ export default function CarInfo() {
                     className="icon"
                     alt=""
                   />
-                  <big>
-                    {car.engine_volume} л {car.engine_power} к.с.
-                  </big>
+                  <big>{car.engine_power} к.с.</big>
                 </li>
               </ul>
             </div>

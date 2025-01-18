@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.db import models
 from django.core.validators import RegexValidator
-from cars.models import Car
 
 
 class Rental(models.Model):
@@ -17,7 +16,7 @@ class Rental(models.Model):
     ]
     
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='rentals')
-    car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='rentals')  
+    car = models.ForeignKey('cars.Car', on_delete=models.CASCADE, related_name='rentals')  
     start_date = models.DateTimeField()  
     end_date = models.DateTimeField() 
     additional_services = models.JSONField(blank=True, null=True) 
@@ -38,12 +37,10 @@ class Rental(models.Model):
 
     def calculate_total_price(self):
         """Обчислення загальної ціни на основі кількості днів оренди та додаткових послуг."""
-        rental_duration = (self.end_date - self.start_date).days
+        rental_duration = (self.end_date - self.start_date).days + 1
         rental_price = 0
 
-        if (rental_duration < 1):
-            raise ValueError("Rental duration must be at least 1 day.")
-        elif (rental_duration > 1 < 4):
+        if (rental_duration > 1 < 4):
             rental_price+= int(self.car.prices[0]['price']) * rental_duration
         elif (rental_duration >= 4 < 10):
             rental_price+= int(self.car.prices[1]['price']) * rental_duration

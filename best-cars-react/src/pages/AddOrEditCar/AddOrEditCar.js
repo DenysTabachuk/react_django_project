@@ -29,7 +29,7 @@ const AddCarForm = () => {
     gearBox: "",
     fuelType: "",
     consumption: "",
-    engineVolume: "",
+    // engineVolume: "",
     enginePower: "",
     mainImage: null,
     additionalImages: [],
@@ -43,8 +43,6 @@ const AddCarForm = () => {
       { range: "26+", price: 0, editing: false },
     ],
   });
-
-  console.log(carData);
 
   const [errorsTexts, setErrorsTexts] = useState({
     nameError: "",
@@ -91,10 +89,10 @@ const AddCarForm = () => {
         condition: !carData.consumption || carData.consumption <= 0,
         errorMessage: "Обов'язково введіть розхід (більше 0)",
       },
-      engineVolume: {
-        condition: !carData.engineVolume || carData.engineVolume <= 0,
-        errorMessage: "Обов'язково введіть об'єм (більше 0)",
-      },
+      // engineVolume: {
+      //   condition: !carData.engineVolume || carData.engineVolume <= 0,
+      //   errorMessage: "Обов'язково введіть об'єм (більше 0)",
+      // },
       enginePower: {
         condition: !carData.enginePower || carData.enginePower <= 0,
         errorMessage: "Обов'язково введіть потужність (більше 0)",
@@ -407,14 +405,6 @@ const AddCarForm = () => {
                       onChange={handleChange}
                     />{" "}
                     Електроенергія
-                    <input
-                      type="radio"
-                      name="fuelType"
-                      value="hybrid"
-                      checked={carData.fuelType === "hybrid"}
-                      onChange={handleChange}
-                    />{" "}
-                    Гібрид
                     {errorsTexts.fuelTypeError && (
                       <p className="error-text">
                         <small>{errorsTexts.fuelTypeError}</small>
@@ -424,7 +414,7 @@ const AddCarForm = () => {
 
                   {/* Consumption */}
                   <div className="input-container">
-                    <label>Розхід*</label>
+                    <label>Розхід* (л / кВт·год)</label>
                     <br />
                     <input
                       type="number"
@@ -443,7 +433,7 @@ const AddCarForm = () => {
                   </div>
 
                   {/* Engine Volume */}
-                  <div className="input-container">
+                  {/* <div className="input-container">
                     <label>Об'м двигуна*</label>
                     <br />
                     <input
@@ -460,16 +450,15 @@ const AddCarForm = () => {
                         <small>{errorsTexts.engineVolumeError}</small>
                       </p>
                     )}
-                  </div>
+                  </div> */}
 
                   {/* Engine Power  */}
                   <div className="input-container">
-                    <label>Потужність двигуна*</label>
+                    <label>Потужність двигуна* (к.с)</label>
                     <br />
                     <input
                       type="number"
                       name="enginePower"
-                      step="0.1"
                       value={carData.enginePower}
                       onChange={handleChange}
                       // required
@@ -552,11 +541,14 @@ const AddCarForm = () => {
           </>
         ) : (
           <>
-            <h1>Для створення оголошення необхідні права адміністратора.</h1>
+            <h1>
+              Для створення/редагування оголошення необхідні права
+              адміністратора.
+            </h1>
             <p>
               <big>
                 Якщо ви впевнені, що у вас мають бути права адміністратора
-                спробуйте перелогінитися на аккаунт.
+                спробуйте перелогінитися в аккаунт.
               </big>
             </p>
           </>

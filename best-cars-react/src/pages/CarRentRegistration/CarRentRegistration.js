@@ -39,6 +39,28 @@ export default function CarRentRegistration() {
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [additionalComment, setAdditionalComment] = useState("");
   const [dates, setDates] = useState({ startDate: "", endDate: "" });
+
+  function containBlockedDates() {
+    const start = new Date(dates.startDate);
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date(dates.endDate);
+    end.setHours(0, 0, 0, 0);
+
+    console.log("aaaa", carInfo);
+
+    for (let blockedDate of carInfo.blocked_dates) {
+      const blocked = new Date(blockedDate);
+      blocked.setHours(0, 0, 0, 0);
+
+      if (blocked >= start && blocked <= end) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(1);
 
@@ -67,6 +89,14 @@ export default function CarRentRegistration() {
             },
           }
         );
+
+        if (response.status === 401) {
+          console.log(
+            "Користувач не авторизований. Перенаправлення на сторінку входу."
+          );
+          navigate("/login");
+          return;
+        }
 
         const profileData = await response.json();
         console.log("Profile data", profileData);
@@ -111,6 +141,15 @@ export default function CarRentRegistration() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    setDateErrorMessage("");
+    if (carInfo != null && containBlockedDates()) {
+      setDateErrorMessage(
+        "Час оренди перетинається з іншими бронюваннями. Будь ласка, виберіть інші дати."
+      );
+    }
+  }, [dates]);
+
   const handleContactInfoChange = (e) => {
     const { name, value } = e.target;
     console.log("handleContactInfoChange", name, value);
@@ -137,7 +176,6 @@ export default function CarRentRegistration() {
 
   const handlePaymentMethodChange = (e) => {
     const { value } = e.target;
-    console.log("Payment method", value);
     setPaymentMethod(value);
   };
 
@@ -178,9 +216,16 @@ export default function CarRentRegistration() {
         rentalDataIsValid = false;
       }
 
+      if (containBlockedDates()) {
+        setDateErrorMessage(
+          "Час оренди перетинається з іншими бронюваннями. Будь ласка, виберіть інші дати."
+        );
+        rentalDataIsValid = false;
+      }
+
       if (!rentalDataIsValid) return;
 
-      console.log("Rental data", rentalData);
+      console.log("Rental data+", rentalData);
       const response = await fetch(`http://localhost:8000/rentals/`, {
         method: "POST",
         headers: {
@@ -193,9 +238,8 @@ export default function CarRentRegistration() {
       if (response.ok) {
         navigate("/");
       } else {
-        const errorData = await response.json();
-        console.error(errorData.message);
-        console.error(errorData.errors);
+        console.error(response.message);
+        console.error(response.errors);
       }
     } catch (error) {
       console.error("Error creating rent:", error);
@@ -235,6 +279,7 @@ export default function CarRentRegistration() {
                 onChangeAction={handleDateChange}
                 dates={dates}
                 dateErrorText={dateErrorMessage}
+                blockedDates={carInfo.blocked_dates}
               ></DatePicking>
             </div>
 

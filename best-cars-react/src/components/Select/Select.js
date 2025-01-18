@@ -7,9 +7,13 @@ export default function Select({
   handleChange,
   selectedValue,
 }) {
-  // let value;
   const handleSelectChange = (e) => {
-    handleChange(name, e.target.value);
+    if (name) {
+      handleChange(name, e.target.value);
+    } else {
+      console.log("e.target.value", e.target.value);
+      handleChange(e.target.value);
+    }
   };
 
   return (

@@ -1,20 +1,20 @@
 import "./Search.css";
 import { useState } from "react";
 
-export default function Search({ handleSearchChange }) {
-  const [searchText, setSearchText] = useState();
+export default function Search({ handleSearchChange, text }) {
+  const [searchText, setSearchText] = useState(text);
 
   const handleSearchTextChange = (event) => {
     setSearchText(event.target.value);
   };
 
   const handleOnSearchButtonClick = () => {
-    handleSearchChange(searchText);
+    handleSearchChange("name", searchText);
   };
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      handleSearchChange(searchText);
+      handleSearchChange("name", searchText);
     }
   };
 
@@ -23,6 +23,7 @@ export default function Search({ handleSearchChange }) {
       <input
         type="text"
         id="search-car"
+        name="name"
         value={searchText}
         onChange={handleSearchTextChange}
         onKeyDown={handleKeyDown}

@@ -10,7 +10,7 @@ export default function OrderSummary({
   function calculateDaysBetweenDates(startDate, endDate) {
     const timeDifference = end - start;
     const daysDifference = timeDifference / (1000 * 3600 * 24);
-    return daysDifference;
+    return daysDifference + 1;
   }
 
   function calculatePriceForRentDays(rentDays) {

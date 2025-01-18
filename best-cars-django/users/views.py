@@ -18,7 +18,6 @@ class RegisterView(APIView):
 
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
-        print("Register",request.data)
         if serializer.is_valid():
             user = serializer.save()
             verification = EmailVerificationCode.objects.create(user=user)
@@ -32,10 +31,8 @@ class RegisterView(APIView):
     
     # confirm email
     def put(self, request):
-        print(request.data)
         serializer = VerifyEmailSerializer(data=request.data)
         if serializer.is_valid():
-            print("Validate data", serializer.validated_data)
             user = serializer.validated_data['user']
             user.is_active = True
             email_verif = EmailVerificationCode.objects.get(user = user)
@@ -43,7 +40,6 @@ class RegisterView(APIView):
             user.save()
             return Response({'message': 'Email verified successfully'}, status=status.HTTP_200_OK)
         else:
-            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -105,7 +101,6 @@ class UserProfileView(APIView):
             return Response({'message': 'Пароль успішно оновлено'})
 
         serializer = UserProfileUpdateSerializer(user, data=request.data, partial=True)
-        print(request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({'message': 'Профіль успішно оновлено', 'data': serializer.data})

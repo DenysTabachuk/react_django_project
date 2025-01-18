@@ -39,6 +39,7 @@ export default function UserProfile() {
       try {
         const response = await axiosConfig.get("users/user-profile/");
         const profileData = response.data;
+
         console.log("Profile data loaded successfully:", profileData);
         setProfile({
           first_name: {
@@ -74,6 +75,13 @@ export default function UserProfile() {
         );
       } catch (error) {
         console.error("Error fetching profile data", error);
+        if (error.status === 401) {
+          console.log(
+            "Користувач не авторизований. Перенаправлення на сторінку входу."
+          );
+          navigate("/login");
+          return;
+        }
       }
     };
 
@@ -334,11 +342,12 @@ export default function UserProfile() {
                     {new Date(rental.end_date).toLocaleDateString("uk-UA")}
                   </p>
                   <p className="description">
-                    Залишилося днів оренди:{" "}
+                    Днів оренди:{" "}
                     {(
                       (new Date(rental.end_date) -
                         new Date(rental.start_date)) /
-                      (1000 * 3600 * 24)
+                        (1000 * 3600 * 24) +
+                      1
                     ).toFixed(0)}
                   </p>
                   <p>

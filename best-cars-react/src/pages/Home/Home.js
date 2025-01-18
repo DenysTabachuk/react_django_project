@@ -20,6 +20,7 @@ const Home = () => {
   const [cars, setCars] = useState(null);
   const [carBrands, setCarBrands] = useState(null);
   const [locations, setLocations] = useState([]);
+  const [filtersReady, setFiltersReady] = useState(false);
 
   const [selectedFilters, setSelectedFilters] = useState({
     brand: "",
@@ -28,11 +29,16 @@ const Home = () => {
     gearBox: "",
     name: "",
     location: "",
+    startDate: "",
+    endDate: "",
   });
+
+  const today = new Date().toISOString().split("T")[0];
+
   const [selectedSortBy, setSelectedSortBy] = useState("");
 
   const sortBy = ["Ціна за зростанням", "Ціна за спаданням"];
-  const fuelTypes = ["Бензин", "Електро", "Дизель", "Гібрид"];
+  const fuelTypes = ["Бензин", "Електро", "Дизель"];
   const carClasses = ["Економ", "Бізнес", "Середній"];
   const gearBoxTypes = ["Механічна", "Автоматична", "Напівавтоматична"];
 
@@ -40,7 +46,6 @@ const Home = () => {
     Бензин: "petrol",
     Електро: "electric",
     Дизель: "diesel",
-    Гібрид: "hybrid",
   };
 
   const carClassMap = {
@@ -55,6 +60,7 @@ const Home = () => {
     Напівавтоматична: "semi-automatic",
   };
 
+  // handle screen resize
   useEffect(() => {
     const handleResize = () => {
       setShowFilters(window.innerWidth > 1024);
@@ -79,16 +85,40 @@ const Home = () => {
     };
 
     const getLocations = async () => {
-      const response = await axiosConfig.get("locations");
-      console.log("Locations: ", locations);
-      setLocations(response.data);
+      try {
+        const response = await axiosConfig.get("locations");
+        console.log("Locations: ", locations);
+        setLocations(response.data);
+      } catch (error) {
+        console.error("Error fetching locations:", error);
+      }
     };
 
     getLocations();
     fetchBrands();
+
+    const storedFilters = getFiltersFromLocalStorage();
+    console.log("Фільтри з localstorage", storedFilters);
+    if (storedFilters) {
+      setSelectedFilters(storedFilters);
+    }
+    setFiltersReady(true); // Фільтри завантажені
   }, []);
 
   useEffect(() => {
+    saveFiltersToLocalStorage(selectedFilters);
+  }, [selectedFilters]);
+
+  useEffect(() => {
+    console.log("selectedFilters оновилися:", selectedFilters);
+  }, [selectedFilters]);
+
+  useEffect(() => {
+    if (!filtersReady) {
+      console.log("Очікуємо готовність фільтрів або локацій...");
+      return;
+    }
+
     const locationObject = locations.find(
       (item) =>
         `${item.city},${item.address}`.trim() ===
@@ -110,7 +140,11 @@ const Home = () => {
       brand: selectedFilters.brand,
       name: selectedFilters.name,
       location: locationObject != null ? locationObject.id : "",
+      start_date: selectedFilters.startDate,
+      end_date: selectedFilters.endDate,
     };
+
+    console.log("Фіотри при пошуку:", filters);
 
     const fetchCars = async () => {
       try {
@@ -122,9 +156,10 @@ const Home = () => {
     };
 
     fetchCars();
-  }, [selectedFilters]);
+  }, [selectedFilters, filtersReady]);
 
   const handleFilterChange = (field, value) => {
+    console.log(field, value);
     setSelectedFilters((prevFilters) => ({
       ...prevFilters,
       [field]: value,
@@ -132,24 +167,31 @@ const Home = () => {
   };
 
   const handleSortBy = (value) => {
+    console.log(value);
     setSelectedSortBy(value);
 
     const sortedCars = [...cars].sort((a, b) => {
       if (value === "Ціна за зростанням") {
-        return a.prices[0].price - b.prices[1].price; // За ціною по зростанню
+        return a.prices[0].price - b.prices[0].price; // За ціною по зростанню
       } else {
-        return b.prices[0].price - a.prices[1].price; // За ціною по спаду
+        return b.prices[0].price - a.prices[0].price; // За ціною по спаду
       }
     });
-    console.log("sortedCars", sortedCars);
 
     setCars(sortedCars);
   };
 
-  const [text, setText] = useState("Натисни щоб побачити фільтри"); // test
-
   const handleClickToShowFilters = () => {
     setShowFilters(!showFilters);
+  };
+
+  const saveFiltersToLocalStorage = (filters) => {
+    localStorage.setItem("carFilters", JSON.stringify(filters));
+  };
+
+  const getFiltersFromLocalStorage = () => {
+    const filters = localStorage.getItem("carFilters");
+    return filters ? JSON.parse(filters) : null;
   };
 
   return (
@@ -161,6 +203,74 @@ const Home = () => {
         <p className="centered-text">
           <big>Оренда найкращих авто у вашому місті по доступній ціні</big>
         </p>
+
+        <div
+          id="select-dates"
+          style={{
+            backgroundColor: "white",
+            padding: "15px",
+            borderRadius: "15px",
+            marginTop: "30px",
+          }}
+        >
+          <p
+            style={{
+              color: "black",
+            }}
+            className="centered-text"
+          >
+            <h2>Оберіть дати</h2>
+          </p>
+
+          <div
+            id="date-select-container"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <div style={{ width: "50%" }}>
+              <label
+                htmlFor="start-date"
+                style={{ color: "black", marginLeft: "10px" }}
+              >
+                <b>
+                  <big>Дата початку:</big>
+                </b>
+              </label>
+              <input
+                style={{ padding: "10px", width: "80%" }}
+                type="date"
+                id="start-date"
+                value={selectedFilters.startDate}
+                onChange={(e) =>
+                  handleFilterChange("startDate", e.target.value)
+                }
+                min={today}
+                max={selectedFilters.endDate}
+              />
+            </div>
+
+            <div style={{ width: "50%" }}>
+              <label
+                htmlFor="end-date"
+                style={{ color: "black", marginLeft: "10px" }}
+              >
+                <b>
+                  <big>Дата кінця:</big>
+                </b>
+              </label>
+              <input
+                style={{ padding: "10px", width: "85%" }}
+                type="date"
+                id="end-date"
+                value={selectedFilters.endDate}
+                onChange={(e) => handleFilterChange("endDate", e.target.value)}
+                min={selectedFilters.startDate || today}
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       <div id="click-to-show-filters" onClick={handleClickToShowFilters}>
@@ -183,9 +293,8 @@ const Home = () => {
           <div
             id="filters"
             style={{
-              // display: !showFilters ? "none" : moveSearch ? "flex" : "block",
+              display: !showFilters ? "none" : "flex",
               // display: moveSearch ? "flex" : "block",
-              display: "flex",
               flexDirection: moveSearch ? "column" : "row",
               alignItems: moveSearch ? "start" : undefined,
               gap: "20px",
@@ -232,12 +341,15 @@ const Home = () => {
               <Select
                 values={sortBy}
                 defaultValue={"Сортувати за"}
-                handleChange={handleFilterChange}
+                handleChange={handleSortBy}
                 selectedValue={selectedSortBy}
               ></Select>{" "}
             </div>
 
-            <Search handleSearchChange={handleFilterChange}></Search>
+            <Search
+              handleSearchChange={handleFilterChange}
+              text={selectedFilters.name}
+            ></Search>
           </div>
 
           {cars === null ? (

@@ -159,3 +159,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True  # Або EMAIL_USE_SSL, якщо використовуєте SSL
 EMAIL_HOST_USER = 'bestcars753@gmail.com'  # Ваша email-адреса
 EMAIL_HOST_PASSWORD = 'tqil pwbh jfsq bdkz'  # Пароль або App Password
+
+
+TIME_ZONE = 'Europe/Kyiv'
+USE_TZ = True  # Увімкнення підтримки UTC

@@ -32,8 +32,8 @@
   padding: 10px 20px 10px 0;
   border: 1px solid gray;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-around;
-  width: 100%;
 }
 
 #logout-button {
@@ -52,7 +52,7 @@
 
 #change-password-container {
   margin-top: 20px;
-  width: 500px;
+  width: 25%;
 }
 
 #change-password-container input {
@@ -69,4 +69,14 @@
   justify-content: space-between;
   padding: 5px;
   gap: 40px;
+}
+
+@media (max-width: 768px) {
+  #change-password-container {
+    width: 73%;
+  }
+
+  .profile-info-item {
+    min-width: 60%;
+  }
 }
