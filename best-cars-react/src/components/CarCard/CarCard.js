@@ -26,9 +26,32 @@ export default function CarCard({ carObject, customButton }) {
               <big>{timePrice.range} дн.</big>
             </span>
             <span>
-              <big>
-                <b>{timePrice.price} $</b> за добу
+              {parseFloat(carObject.discount_percentage) != 0 && (
+                <big style={{ textDecoration: "line-through" }}>
+                  <b>
+                    {timePrice.price}
+                    {"$ "}
+                  </b>
+                </big>
+              )}
+
+              <big
+                style={{
+                  color:
+                    parseFloat(carObject.discount_percentage) != 0 && "red",
+                }}
+              >
+                <b>
+                  {parseFloat(carObject.discount_percentage) !== 0
+                    ? (
+                        timePrice.price -
+                        (timePrice.price * carObject.discount_percentage) / 100
+                      ).toFixed(2)
+                    : timePrice.price.toFixed(2)}
+                  $
+                </b>
               </big>
+              <big> за добу</big>
             </span>
           </div>
         ))}

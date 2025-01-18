@@ -18,7 +18,7 @@ class CarPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Car
         fields = ['id', 'name', 'gear_box', 'fuel_type', "car_class",
-                    'consumption', 'brand', "location",
+                    'consumption', 'brand', "location", "discount_percentage",
                     'engine_power', 'prices', 'main_image',
                     'additional_functions', 'description']
     
@@ -38,7 +38,7 @@ class CarGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Car
         fields = ['id', 'name', 'gear_box', 'fuel_type', 'brand', "car_class",
-                    'consumption', 'additional_images', "location",
+                    'consumption', 'additional_images', "location", "discount_percentage",
                     'engine_power', 'prices', 'additional_functions',
                     'description', 'main_image_url', 'blocked_dates']
         

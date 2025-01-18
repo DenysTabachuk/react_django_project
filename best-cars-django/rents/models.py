@@ -39,16 +39,19 @@ class Rental(models.Model):
         """Обчислення загальної ціни на основі кількості днів оренди та додаткових послуг."""
         rental_duration = (self.end_date - self.start_date).days + 1
         rental_price = 0
+        price_per_day = 0
 
-        if (rental_duration > 1 < 4):
-            rental_price+= int(self.car.prices[0]['price']) * rental_duration
-        elif (rental_duration >= 4 < 10):
-            rental_price+= int(self.car.prices[1]['price']) * rental_duration
-        elif (rental_duration >= 10 < 26):
-            rental_price+= int(self.car.prices[2]['price']) * rental_duration
+        if 1 < rental_duration < 4:
+            price_per_day = int(self.car.prices[0]['price'])
+        elif 4 <= rental_duration < 10:
+            price_per_day = int(self.car.prices[1]['price'])
+        elif 10 <= rental_duration < 26:
+            price_per_day = int(self.car.prices[2]['price'])
         else:
-            rental_price+= int(self.car.prices[3]['price']) * rental_duration
-             
+            price_per_day = int(self.car.prices[3]['price'])
+
+        rental_price = price_per_day * (1 - self.car.discount_percentage / 100) * rental_duration
+
         services_price = 0
         for service in self.additional_services:
             services_price+= int(service['price'])

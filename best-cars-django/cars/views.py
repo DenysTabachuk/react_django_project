@@ -23,6 +23,7 @@ class CarView(APIView):
     # permission_classes = [AllowAny]
     def get_permissions(self):
         if self.request.method == 'GET':
+            authentication_classes = []
             return [AllowAny()]
         return [IsAdminUser()]
     

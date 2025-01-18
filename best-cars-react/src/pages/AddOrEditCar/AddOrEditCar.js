@@ -31,6 +31,7 @@ const AddCarForm = () => {
     consumption: "",
     // engineVolume: "",
     enginePower: "",
+    discountPercentage: 0,
     mainImage: null,
     additionalImages: [],
     additionalFunctions: [],
@@ -100,6 +101,11 @@ const AddCarForm = () => {
       mainImage: {
         condition: !carData.mainImage,
         errorMessage: "Обов'язково додайте основне фото",
+      },
+      discountPercentage: {
+        condition:
+          carData.discountPercentage < 0 || carData.discountPercentage > 100,
+        errorMessage: "Відсоток знижки повинен бути у межах від 0 до 100 %",
       },
     };
 
@@ -512,6 +518,27 @@ const AddCarForm = () => {
                     carDataObj={carData}
                     setCarData={setCarData}
                   ></PriceTable>
+
+                  <div
+                    className="input-container"
+                    style={{ marginTop: "20px", width: "30%" }}
+                  >
+                    <label>Знижка %</label>
+                    <br />
+                    <input
+                      type="number"
+                      step="0.1"
+                      name="discountPercentage"
+                      value={carData.discountPercentage}
+                      onChange={handleChange}
+                    />
+                    {errorsTexts.discountPercentageError && (
+                      <p className="error-text">
+                        <small>{errorsTexts.discountPercentageError}</small>
+                      </p>
+                    )}
+                  </div>
+
                   <AddMainImage
                     carDataObj={carData}
                     setCarData={setCarData}

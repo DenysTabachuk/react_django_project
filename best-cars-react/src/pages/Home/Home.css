@@ -48,6 +48,11 @@
     width: calc(25% - 47px);
   }
 }
+@media (max-width: 1440px) {
+  #car-cards-container .car-card {
+    width: calc(33% - 41px);
+  }
+}
 
 @media (max-width: 1024px) {
   #car-cards-container .car-card {

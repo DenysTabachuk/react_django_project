@@ -91,7 +91,8 @@ export default function RentalItem({ rentalObj, statusFilter, screenWidth }) {
             Днів оренди:{" "}
             {(
               (new Date(rentalObj.end_date) - new Date(rentalObj.start_date)) /
-              (1000 * 3600 * 24)
+                (1000 * 3600 * 24) +
+              1
             ).toFixed(0)}
           </p>
           <p className="description">

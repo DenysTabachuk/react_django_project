@@ -55,7 +55,10 @@ class Car(models.Model):
     description = models.TextField(blank=True)
     car_class = models.CharField(max_length=50, choices=CAR_CLASS, default='middle')
     location = models.ForeignKey('Location', on_delete=models.CASCADE, related_name='rentals')
-    
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, default=0)  # Відсоток знижки
+
+
+
     def __str__(self):
         return self.name
     
