@@ -30,6 +30,7 @@ export default function UserProfile() {
   });
   const [changingPassword, setChangingPassword] = useState(false);
   const [ongoingRentals, setOngoingRentals] = useState([]);
+  console.log(ongoingRentals);
   const [completedRentals, setCompletedRentals] = useState([]);
   const [changingPasswordError, setChanginhPasswordError] = useState("");
   const navigate = useNavigate();
@@ -225,7 +226,7 @@ export default function UserProfile() {
       <Header />
 
       <div id="page-content">
-        <h1>Профіль користувача: {profile.email.value || "Завантаження..."}</h1>
+        <h2>Профіль користувача: {profile.email.value || "Завантаження..."}</h2>
 
         <div id="profile-info-container">
           {Object.entries(profile).map(([key, { value, label, editing }]) => {
@@ -361,6 +362,11 @@ export default function UserProfile() {
                   )}
                   {rental.approval_status === "approved" && (
                     <p className="green-text">Оренду підтверджено</p>
+                  )}
+                  {rental.is_paid ? (
+                    <p className="green-text">Оплачено</p>
+                  ) : (
+                    <p className="red-text">Не оплачено</p>
                   )}
                 </div>
               </div>

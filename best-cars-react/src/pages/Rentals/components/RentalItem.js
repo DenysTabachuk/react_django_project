@@ -2,7 +2,12 @@ import axiosConfig from "../../../api/axiosConfig.js";
 import React, { useState, useEffect } from "react";
 
 export default function RentalItem({ rentalObj, statusFilter, screenWidth }) {
-  console.log("rentalObj", rentalObj);
+  const [showComment, setShowComment] = useState(false);
+
+  const handleShowComment = async () => {
+    setShowComment(!showComment);
+  };
+
   const handleRentalStatusChange = async (newStatus, rentalId) => {
     try {
       const response = await axiosConfig.patch(
@@ -101,6 +106,11 @@ export default function RentalItem({ rentalObj, statusFilter, screenWidth }) {
           <p>
             <b>{rentalObj.total_price}$</b>
           </p>
+          {rentalObj.is_paid ? (
+            <p className="green-text">Оплачено</p>
+          ) : (
+            <p className="red-text">Не оплачено</p>
+          )}
         </div>
 
         <div
@@ -169,6 +179,47 @@ export default function RentalItem({ rentalObj, statusFilter, screenWidth }) {
           </div>
         )}
       </div>
+
+      {rentalObj.comment && (
+        <div>
+          <div
+            id="click-to-show-comment"
+            onClick={handleShowComment}
+            style={{
+              backgroundColor: "gray",
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+              padding: "10px 15px 10px 15px",
+              boxSizing: "border-box",
+            }}
+          >
+            <span>
+              {showComment
+                ? "Натисни щоб приховати коментар"
+                : "Натисни щоб побачити коментар"}
+            </span>
+            <img
+              src="icons/down-arrow.png"
+              alt=""
+              className={`icon down-arrow${showComment ? "-up" : ""}`}
+            />
+          </div>
+
+          <div
+            className={`comment ${showComment ? "fade-in" : "fade-out"}`}
+            style={{
+              padding: "15px",
+              border: "1px solid gray",
+              opacity: showComment ? 1 : 0,
+              transition: "opacity 0.5s ease-in-out",
+              overflow: "hidden",
+            }}
+          >
+            {rentalObj.comment}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

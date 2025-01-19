@@ -171,10 +171,19 @@ const Home = () => {
     setSelectedSortBy(value);
 
     const sortedCars = [...cars].sort((a, b) => {
+      const basePriceA = a.prices[0].price;
+      const basePriceB = b.prices[0].price;
+
+      const discountA = a.discount_percentage || 0;
+      const discountB = b.discount_percentage || 0;
+
+      const finalPriceA = basePriceA * (1 - discountA / 100);
+      const finalPriceB = basePriceB * (1 - discountB / 100);
+
       if (value === "Ціна за зростанням") {
-        return a.prices[0].price - b.prices[0].price; // За ціною по зростанню
+        return finalPriceA - finalPriceB;
       } else {
-        return b.prices[0].price - a.prices[0].price; // За ціною по спаду
+        return finalPriceB - finalPriceA;
       }
     });
 

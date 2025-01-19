@@ -169,7 +169,7 @@ export default function CarInfo() {
             </div>
           </div>
 
-          <div id="column2" style={{ height: "100%" }}>
+          <div id="column2" style={{ height: "100%", marginTop: "140px" }}>
             <CarCard
               carObject={car}
               customButton={

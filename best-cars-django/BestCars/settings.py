@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'users',
     'rents',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
@@ -163,3 +164,8 @@ EMAIL_HOST_PASSWORD = 'tqil pwbh jfsq bdkz'  # Пароль або App Password
 
 TIME_ZONE = 'Europe/Kyiv'
 USE_TZ = True  # Увімкнення підтримки UTC
+
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}

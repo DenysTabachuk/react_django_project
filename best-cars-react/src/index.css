@@ -3,6 +3,7 @@ html {
   margin: 0;
   padding: 0;
   width: 100%;
+  font-family: "Inter", sans-serif;
 }
 
 .centered-text {
@@ -13,6 +14,10 @@ html {
   color: red;
   padding: 0;
   margin: 0;
+}
+
+.red-text {
+  color: red;
 }
 
 .blue-text {

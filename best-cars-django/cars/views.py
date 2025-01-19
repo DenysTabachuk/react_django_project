@@ -2,9 +2,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import *
 from .serializers import *
-from rest_framework.permissions import AllowAny, IsAdminUser
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.db.models import Q
 from datetime import datetime
+from rents.views import IsAdmin
 
 
 class BrandListView(APIView):
@@ -20,12 +21,16 @@ class BrandListView(APIView):
 
 class CarView(APIView):
     # authentication_classes = []
-    # permission_classes = [AllowAny]
+    # permission_classes = []
     def get_permissions(self):
+        """
+        Повертаємо відповідні дозволи для кожного методу:
+        - Для post: IsAuthenticated (тільки авторизовані користувачі)
+        - Для get, patch, delete: IsAdmin (тільки адміністратори)
+        """
         if self.request.method == 'GET':
-            authentication_classes = []
             return [AllowAny()]
-        return [IsAdminUser()]
+        return [IsAdmin()]
     
 
     def get(self, request, pk=None):
