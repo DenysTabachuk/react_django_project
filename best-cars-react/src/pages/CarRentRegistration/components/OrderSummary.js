@@ -38,11 +38,17 @@ export default function OrderSummary({
   }
 
   let rentDays;
-  let totalPrice;
   let rentDaysPrice;
+  let totalPrice;
   if (!isNaN(start.getTime()) && !isNaN(end.getTime())) {
     rentDays = calculateDaysBetweenDates(start, end);
     rentDaysPrice = calculatePriceForRentDays(rentDays);
+
+    // Apply discount if available
+    if (carInfo.discount_percentage > 0) {
+      rentDaysPrice -= (rentDaysPrice * carInfo.discount_percentage) / 100;
+    }
+
     totalPrice = calculatePriceForAdditionalOptions() + rentDaysPrice;
   } else {
     rentDays = 0;
@@ -64,20 +70,20 @@ export default function OrderSummary({
             <div className="option-price" key={option.id}>
               <span>{option.name}</span>
               <span>
-                <b>{option.price}$</b>
+                <b>{parseFloat(option.price).toFixed(2)}$</b>
               </span>
             </div>
           ))}
           <div className="option-price">
-            <span>Mercedes GLS x{rentDays} доба/діб</span>
+            <span>Mercedes GLS x{rentDays} дн.</span>
             <span>
-              <b>{rentDaysPrice}$</b>
+              <b>{rentDaysPrice.toFixed(2)}$</b>
             </span>
           </div>
           <div className="option-price">
             <h3>Всього</h3>
             <span>
-              <b>{totalPrice}$</b>
+              <b>{totalPrice.toFixed(2)}$</b>
             </span>
           </div>
         </div>

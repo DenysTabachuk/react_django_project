@@ -275,7 +275,11 @@ const AddCarForm = () => {
           <h2>Завантаження</h2>
         ) : isAdmin ? (
           <>
-            <h1 className="centered-text">Створення нового оголошення</h1>
+            <h1 className="centered-text">
+              {isEditing
+                ? "Редагування оголошення оренди авто"
+                : "Створення нового оголошення"}
+            </h1>
 
             <form onSubmit={handleSubmit} id="add-new-car-form">
               <div id="column-container">
